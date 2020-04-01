@@ -9,9 +9,7 @@ color 71
 cls
 :start
 cls
-ECHO.========================================================== && ECHO.=
-Welcome to the NO DISPLAY TROUBLESHOOTER! = &&
-ECHO.========================================================== && ECHO. &&
+
 ECHO.Unplug all cables except for Motherboard and CPU power. && ECHO.Make sure that there is a
 Motherboard speaker plugged in. && ECHO.Test your monitor and display cable before starting. && ECHO.Turn
 on the computer. Does the display work? && ECHO. && ECHO.1 = Yes && ECHO.2 = No && ECHO.9 = Exit
