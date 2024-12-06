@@ -10,3 +10,4 @@
 #    - pironman-install
 #    - k3s-pi-install
     - k3s-fluxcd-bootstrap
+    - k3s-cert-manager
