@@ -1,0 +1,66 @@
+---
+- name: Fetch GitHub Runner Registration Token
+  uri:
+    url: "https://api.github.com/repos/{{ github_repo }}/actions/runners/registration-token"
+    method: POST
+    headers:
+      Authorization: "token {{ github_token }}"
+      Accept: "application/vnd.github.v3+json"
+    return_content: yes
+  register: runner_token_response
+
+- name: Parse Runner Token
+  set_fact:
+    runner_token: "{{ runner_token_response.json.token }}"
+
+- name: Ensure Kubernetes Namespace for GitHub Runners
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      kind: Namespace
+      apiVersion: v1
+      metadata:
+        name: "{{ namespace }}"
+
+- name: Deploy GitHub Runner to K3s
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: "{{ runner_name }}"
+        namespace: "{{ namespace }}"
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: "{{ runner_name }}"
+        template:
+          metadata:
+            labels:
+              app: "{{ runner_name }}"
+          spec:
+            containers:
+            - name: runner
+              image: "{{ runner_image }}"
+              env:
+              - name: RUNNER_NAME
+                value: "{{ runner_name }}"
+              - name: RUNNER_REPO
+                value: "{{ github_repo }}"
+              - name: RUNNER_TOKEN
+                value: "{{ runner_token }}"
+              - name: RUNNER_LABELS
+                value: "{{ runner_labels }}"
+              - name: ORG_RUNNER
+                value: "false" # Set to true for organisation-level runners
+              volumeMounts:
+              - mountPath: /data
+                name: runner-data
+              securityContext:
+                runAsUser: 1000
+                runAsGroup: 1000
+            volumes:
+            - name: runner-data
+              emptyDir: {}
