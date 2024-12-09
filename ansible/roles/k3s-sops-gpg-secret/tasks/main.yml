@@ -7,6 +7,11 @@
 # gpg --list-keys
 # gpg --list-secret-keys
 
+# export SOPS_AGE_KEY_FILE=/Users/calebsargeant/age.agekey
+# sops --encrypt --age age1yj3wdeleng98w9rv46yh40ettc78r9k4r4wgnx7ja5zxmyt8qe7snjg0a0 --encrypted-regex '^(data|stringData)$' -i cloudflare-secret-enc.yaml
+-
+
+
 #- name: Apply Kubernetes Secret
 #  command: kubectl apply -f templates/sops-gpg-secret.yaml
 #  delegate_to: localhost
