@@ -20,22 +20,24 @@
 #- name: Create SOPS GPG secret
 #  hosts: localhost
 #  tasks:
-- name: Export GPG private key
-  command: cat {{ gpg_key_path }}/pgp.asc
-  register: gpg_key
+#- name: Grab the GPG key
+#  command: cat {{ gpg_key_path }}/pgp.asc
+#  register: gpg_key
+#  changed_when: false
+#  become: false
+#  delegate_to: localhost
+
+#- name: Copy GPG key to server
+#  copy:
+#    content: "{{ gpg_key.stdout }}"
+#    dest: /tmp/pgp.asc
+
+- name: Base64 encode GPG key
+  shell: base64 -w 0 -i {{ gpg_key_path }}/pgp.asc
+  register: base64_key
   changed_when: false
   become: false
   delegate_to: localhost
-
-- name: Base64 encode the GPG key
-  copy:
-    content: "{{ gpg_key.stdout }}"
-    dest: /tmp/pgp.asc
-
-- name: Base64 encode GPG key
-  shell: base64 -w 0 /tmp/pgp.asc
-  register: base64_key
-  changed_when: false
 
 - name: Create Kubernetes Secret manifest
   copy:

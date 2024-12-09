@@ -1,0 +1,8 @@
+---
+- hosts: firefly
+  become: yes
+  become_method: sudo
+  vars_files:
+  - vars/pi.yml
+  roles:
+    - k3s-fluxcd-reconcile

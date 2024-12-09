@@ -1,3 +1,0 @@
-- name: Install Cert Manager on k3s
-  shell: |
-    kubectl apply -f {{ cert_manager_download_url }}
