@@ -15,3 +15,8 @@ spec:
             apiTokenSecretRef:
               name: cloudflare-api-token-secret
               key: dns-cloudflare-api-token
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-gpg
+      namespace: flux-system

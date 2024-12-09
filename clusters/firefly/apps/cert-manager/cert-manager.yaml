@@ -17,3 +17,9 @@ spec:
       name: sops-gpg
       namespace: flux-system
   wait: true
+
+#│ {"level":"error","ts":"2024-12-09T14:56:28.778Z","msg":"Reconciliation failed after 1.077787334s, next try in 1m0s","controlle │
+#│ r":"kustomization","controllerGroup":"kustomize.toolkit.fluxcd.io","controllerKind":"Kustomization","Kustomization":{"name":"a │
+#│ pps","namespace":"flux-system"},"namespace":"flux-system","name":"apps","reconcileID":"d2e381a6-0780-4e6e-b9f6-3b7d2ecf39de"," │
+#│ revision":"main@sha1:c152479233b64ce812867a771e2c2c9dbf53d99a","error":"Secret/cert-manager/cloudflare-api-token-secret is SOP │
+#│ S encrypted, configuring decryption is required for this secret to be reconciled"}
