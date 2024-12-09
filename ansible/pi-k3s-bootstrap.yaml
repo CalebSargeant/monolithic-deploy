@@ -5,9 +5,9 @@
   vars_files:
   - vars/pi.yml
   roles:
-#    - apt-update-upgrade
-#    - root-terminal-colours
-#    - pironman-install
-#    - k3s-pi-install
-#    - k3s-fluxcd-bootstrap
+    - apt-update-upgrade
+    - root-terminal-colours
+    - pironman-install
+    - k3s-pi-install
+    - k3s-fluxcd-bootstrap
     - k3s-sops-gpg-secret

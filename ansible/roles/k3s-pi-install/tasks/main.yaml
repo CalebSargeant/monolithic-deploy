@@ -27,10 +27,10 @@
   replace:
     path: /etc/rancher/k3s/k3s.yaml
     regexp: "server: https://.*:6443"
-    replace: "server: https://{{ pi_fqdn }}:6443"
+    replace: "server: https://{{ pi_ip }}:6443"
 
 - name: Retrieve K3s kubeconfig
   fetch:
     src: /etc/rancher/k3s/k3s.yaml
-    dest: ./k3s.yaml
+    dest: ~/.kube/{{ pi_name }}.yaml
     flat: yes
