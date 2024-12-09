@@ -1,7 +1,7 @@
 # brew install gpg
 # export GPG_TTY=$(tty)
 # gpg --full-generate-key (rsa/rsa 4096)
-# sops --encrypt --pgp "D9B513707705B08EAB4D4071A663ED74C5A7646E" cloudflare-secret.yaml > cloudflare-secret.enc.yaml
+# sops --encrypt --pgp "D9B513707705B08EAB4D4071A663ED74C5A7646E" --encrypted-regex '^(data)$ cloudflare-secret.yaml > cloudflare-secret-enc.yaml
 # sops --decrypt cloudflare-secret.enc.yaml
 # gpg --export-secret-keys --armor caleb@sargeant.co | base64
 # gpg --list-keys
