@@ -27,6 +27,6 @@ spec:
   timeout: 2m
   decryption:
       provider: sops
-  secretRef:
-    name: sops-gpg
-    namespace: flux-system
+      secretRef:
+        name: sops-gpg
+        namespace: flux-system
