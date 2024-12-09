@@ -50,7 +50,7 @@
         namespace: flux-system
       type: Opaque
       data:
-        pgp.asc: "{{ base64_key.stdout }}"
+        gpgkey: "{{ base64_key.stdout }}"
 
 - name: Apply Kubernetes Secret
   command: kubectl apply -f /tmp/sops-gpg-secret.yaml
