@@ -20,6 +20,6 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: monolithic-deploy
+    name: apps
     namespace: flux-system
   timeout: 2m
