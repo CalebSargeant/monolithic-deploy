@@ -32,8 +32,15 @@
 #    content: "{{ gpg_key.stdout }}"
 #    dest: /tmp/pgp.asc
 
-- name: Base64 encode GPG key
-  shell: base64 -w 0 -i {{ gpg_key_path }}/pgp.asc
+#- name: Base64 encode GPG key
+#  shell: base64 -w 0 -i {{ gpg_key_path }}/pgp.asc
+#  register: base64_key
+#  changed_when: false
+#  become: false
+#  delegate_to: localhost
+
+- name: Base64 encode age key
+  shell: base64 -w 0 -i {{ gpg_key_path }}/age.agekey
   register: base64_key
   changed_when: false
   become: false
@@ -41,16 +48,16 @@
 
 - name: Create Kubernetes Secret manifest
   copy:
-    dest: /tmp/sops-gpg-secret.yaml
+    dest: /tmp/sops-age-secret.yaml
     content: |
       apiVersion: v1
       kind: Secret
       metadata:
-        name: sops-gpg
+        name: sops-keys
         namespace: flux-system
       type: Opaque
       data:
-        gpgkey: "{{ base64_key.stdout }}"
+        identity.agekey: "{{ base64_key.stdout }}"
 
 - name: Apply Kubernetes Secret
-  command: kubectl apply -f /tmp/sops-gpg-secret.yaml
+  command: kubectl apply -f /tmp/sops-age-secret.yaml

@@ -23,7 +23,7 @@
       --branch={{ flux_repo_branch }} \
       --path={{ flux_repo_path }} \
       --personal \
-      --force
+      --force \
       --components-extra=image-reflector-controller,image-automation-controller \
       --decryption-provider=sops \
       --decryption-secret=sops-age
