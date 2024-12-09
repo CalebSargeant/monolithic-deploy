@@ -1,0 +1,54 @@
+# brew install gpg
+# export GPG_TTY=$(tty)
+# gpg --full-generate-key (rsa/rsa 4096)
+# sops --encrypt --pgp "D9B513707705B08EAB4D4071A663ED74C5A7646E" cloudflare-secret.yaml > cloudflare-secret.enc.yaml
+# sops --decrypt cloudflare-secret.enc.yaml
+# gpg --export-secret-keys --armor caleb@sargeant.co | base64
+# gpg --list-keys
+# gpg --list-secret-keys
+
+#- name: Apply Kubernetes Secret
+#  command: kubectl apply -f templates/sops-gpg-secret.yaml
+#  delegate_to: localhost
+#  become: false
+
+#- name: Create a Deployment by reading the definition from a local file
+#  kubernetes.core.k8s:
+#    state: present
+#    src: templates/sops-gpg-secret.yaml
+
+#- name: Create SOPS GPG secret
+#  hosts: localhost
+#  tasks:
+- name: Export GPG private key
+  command: cat {{ gpg_key_path }}/pgp.asc
+  register: gpg_key
+  changed_when: false
+  become: false
+  delegate_to: localhost
+
+- name: Base64 encode the GPG key
+  copy:
+    content: "{{ gpg_key.stdout }}"
+    dest: /tmp/pgp.asc
+
+- name: Base64 encode GPG key
+  shell: base64 -w 0 /tmp/pgp.asc
+  register: base64_key
+  changed_when: false
+
+- name: Create Kubernetes Secret manifest
+  copy:
+    dest: /tmp/sops-gpg-secret.yaml
+    content: |
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: sops-gpg
+        namespace: flux-system
+      type: Opaque
+      data:
+        pgp.asc: "{{ base64_key.stdout }}"
+
+- name: Apply Kubernetes Secret
+  command: kubectl apply -f /tmp/sops-gpg-secret.yaml
