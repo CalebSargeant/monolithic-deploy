@@ -3,4 +3,10 @@ kind: Kustomization
 resources:
 - gotk-components.yaml
 - gotk-sync.yaml
-- app-kustomization.yaml
+# Add your different flux components here, like different kustomizations & gitrepositories, for flux to reconcile:
+- apps.yaml
+
+# The above apps.yaml is a kustomization that points to the apps directory in the monolithic-deploy repo.
+# You can add one yaml file per repo that you want flux to reconcile - say one repo per team or per application.
+# In our case, we've got the flux-system components and all of our apps that we want to add to our k3s cluster, seperated into different directories.
+# The flux-system folder contains the flux-system namespace and the flux components (flux itself on the cluster).

@@ -1,5 +1,5 @@
 - name: Reconcile the GitRepository source
-  command: flux --kubeconfig /etc/rancher/k3s/k3s.yaml reconcile source git flux-system
+  command: flux --kubeconfig /etc/rancher/k3s/k3s.yaml reconcile source git {{ flux_repo_name }}
 
 - name: Recreate the Kustomization object
-  command: flux --kubeconfig /etc/rancher/k3s/k3s.yaml reconcile kustomization flux-system -n flux-system
+  command: flux --kubeconfig /etc/rancher/k3s/k3s.yaml reconcile kustomization apps -n flux-system
