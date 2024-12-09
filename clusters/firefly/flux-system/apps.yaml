@@ -8,6 +8,8 @@ spec:
   url: ssh://git@github.com/CalebSargeant/monolithic-deploy
   ref:
     branch: main
+  secretRef:
+    name: flux-system
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
