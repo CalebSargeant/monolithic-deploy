@@ -3,6 +3,8 @@ kind: Kustomization
 metadata:
   name: apps
   namespace: flux-system
+  labels:
+      app.kubernetes.io/sops: "enabled"
 spec:
   interval: 1m
   path: ./apps/cert-manager

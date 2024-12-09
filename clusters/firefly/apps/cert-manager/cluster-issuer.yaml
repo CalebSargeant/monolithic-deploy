@@ -3,6 +3,8 @@ kind: ClusterIssuer
 metadata:
   name: letsencrypt-dns
   namespace: cert-manager
+  labels:
+
 spec:
   acme:
     email: caleb.sargeant@icloud.com
