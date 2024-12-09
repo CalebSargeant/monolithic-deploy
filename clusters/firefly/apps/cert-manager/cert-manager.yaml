@@ -12,10 +12,10 @@ spec:
     name: apps
     namespace: flux-system
   decryption:
-      provider: sops
-      secretRef:
-        name: sops-gpg
-        namespace: flux-system
+    provider: sops
+    secretRef:
+      name: sops-gpg
+      namespace: flux-system
 #│ {"level":"error","ts":"2024-12-09T14:56:28.778Z","msg":"Reconciliation failed after 1.077787334s, next try in 1m0s","controlle │
 #│ r":"kustomization","controllerGroup":"kustomize.toolkit.fluxcd.io","controllerKind":"Kustomization","Kustomization":{"name":"a │
 #│ pps","namespace":"flux-system"},"namespace":"flux-system","name":"apps","reconcileID":"d2e381a6-0780-4e6e-b9f6-3b7d2ecf39de"," │
