@@ -16,7 +16,6 @@ spec:
     secretRef:
       name: sops-gpg
       namespace: flux-system
-  wait: true
 
 #│ {"level":"error","ts":"2024-12-09T14:56:28.778Z","msg":"Reconciliation failed after 1.077787334s, next try in 1m0s","controlle │
 #│ r":"kustomization","controllerGroup":"kustomize.toolkit.fluxcd.io","controllerKind":"Kustomization","Kustomization":{"name":"a │
