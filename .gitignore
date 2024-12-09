@@ -41,3 +41,6 @@ k3s.yaml
 *secret.yaml
 
 ansible/vars
+
+.sops.yaml
+age.agekey
