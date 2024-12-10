@@ -1,17 +1,19 @@
 remote_state {
-  backend = "s3"
+  backend = "gcs"
   config = {
-    bucket         = "my-terragrunt-bucket"
-    key            = "${path_relative_to_include()}/terraform.tfstate"
-    region         = "us-west-2"
+    bucket         = "terraform-state-firefly"
+    prefix         = "terraform/gcp_project"
+    credentials    = "${get_env("GOOGLE_APPLICATION_CREDENTIALS", "${get_repo_root()}/terraform/.service-account.json")}"
+    project        = "sargeant-terraform-states"
   }
 }
 
+generate "backend" {
+  path      = "backend.tf"
+  if_exists = "overwrite"
+  contents  = <<EOF
 terraform {
-  extra_arguments "common_vars" {
-    commands = ["plan", "apply", "destroy"]
-    arguments = [
-      "-var-file=${get_terragrunt_dir()}/common.tfvars"
-    ]
-  }
+  backend "gcs" {}
+}
+EOF
 }

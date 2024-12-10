@@ -23,10 +23,7 @@
       --branch={{ flux_repo_branch }} \
       --path={{ flux_repo_path }} \
       --personal \
-      --force \
-      --components-extra=image-reflector-controller,image-automation-controller \
-      --decryption-provider=sops \
-      --decryption-secret=sops-age
+      --force
   environment:
     GITHUB_TOKEN: "{{ github_token }}"
     KUBECONFIG: "/etc/rancher/k3s/k3s.yaml"

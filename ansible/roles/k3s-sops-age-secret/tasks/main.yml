@@ -20,7 +20,7 @@
 # sops -d cloudflare-secret-enc.yaml
 # The key called "sops-keys" is created in the flux-system namespace with the age key as the value (see playbook below)
 # encoding the cloudflare key (the secret we want to protect):
-# echo  "apikey" | base64
+# echo -n "apikey" | base64
 # decoding the key:
 # echo "base64encodedApiKey" | base64 -d
 # cloudflare secret file (cloudflare-secret-enc.yaml):
@@ -72,7 +72,7 @@
 #  delegate_to: localhost
 
 - name: Base64 encode age key
-  shell: base64 -w 0 -i {{ gpg_key_path }}/age.agekey
+  shell: echo -n "$(cat {{ age_key_path }}/age.agekey | grep AGE)"
   register: base64_key
   changed_when: false
   become: false

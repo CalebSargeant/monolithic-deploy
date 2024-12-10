@@ -1,0 +1,29 @@
+---
+- name: Authenticate with GCP
+  gcp_auth:
+    service_account_file: "{{ credentials_file }}"
+
+- name: Create GCP project
+  google.cloud.gcp_project:
+    name: "{{ project_name }}"
+    project_id: "{{ project_id }}"
+    billing_account: "{{ billing_account }}"
+    organization_id: "{{ organization_id }}"
+    state: present
+
+- name: Enable required GCP APIs
+  google.cloud.gcp_project_iam_policy:
+    project: "{{ project_id }}"
+    bindings:
+      - role: "roles/resourcemanager.projectIamAdmin"
+        members:
+          - "serviceAccount:{{ project_id }}@appspot.gserviceaccount.com"
+
+- name: Create GCS bucket for Terraform state
+  google.cloud.gcp_storage_bucket:
+    name: "{{ bucket_name }}"
+    location: "{{ location }}"
+    project: "{{ project_id }}"
+    storage_class: "STANDARD"
+    versioning: true
+    state: present

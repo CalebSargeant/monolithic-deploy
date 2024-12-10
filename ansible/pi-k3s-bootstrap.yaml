@@ -3,7 +3,7 @@
   become: yes
   become_method: sudo
   vars_files:
-  - vars/pi.yml
+  - vars/pi.yaml
   roles:
 #    - apt-update-upgrade
 #    - root-terminal-colours

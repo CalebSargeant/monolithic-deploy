@@ -44,3 +44,4 @@ ansible/vars
 
 .sops.yaml
 age.agekey
+.service-account.json
