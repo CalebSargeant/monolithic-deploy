@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: plex-ingress
+  namespace: plex
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/service.serversscheme: http
+    traefik.ingress.kubernetes.io/entrypoints: websecure
+  labels:
+    app: plex
+spec:
+  rules:
+    - host: plex.sargeant.co # Replace with your domain
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: plex-service
+                port:
+                  number: 32400
+  tls:
+    - hosts:
+        - plex.sargeant.co
+      secretName: plex-tls # Secret for the TLS certificate

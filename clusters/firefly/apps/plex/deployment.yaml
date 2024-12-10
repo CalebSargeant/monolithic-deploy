@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plex
+  namespace: plex
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: plex
+  template:
+    metadata:
+      labels:
+        app: plex
+    spec:
+      containers:
+        - name: plex
+          image: plexinc/pms-docker:latest
+          ports:
+            - containerPort: 32400 # Plex web interface
+          env:
+            - name: PLEX_CLAIM
+              value: "claim-sS4YYVnKtpsp7roc88Xh" # Optional, get a claim token from https://www.plex.tv/claim
+          volumeMounts:
+            - mountPath: /config
+              name: plex-pvc
+            - mountPath: /movies
+              name: movies-pvc
+            - mountPath: /series
+              name: series-pvc
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: plex-pvc
+        - name: movies
+          persistentVolumeClaim:
+            claimName: movies-pvc
+        - name: series
+          persistentVolumeClaim:
+            claimName: series-pvc
