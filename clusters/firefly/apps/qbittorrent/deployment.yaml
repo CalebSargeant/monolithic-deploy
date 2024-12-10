@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: qbittorrent
-          image: linuxserver/qbittorrent:arm64-5.0.2
+          image: linuxserver/qbittorrent:5.0.2
           ports:
             - containerPort: 8080 # Web UI
             - containerPort: 6881 # BitTorrent (TCP/UDP)
@@ -30,11 +30,11 @@ spec:
               value: "8080" # Set qBittorrent Web UI port
           volumeMounts:
             - mountPath: /config
-              name: config
+              name: qbittorrent
             - mountPath: /downloads
               name: downloads
       volumes:
-        - name: config
+        - name: qbittorrent
           persistentVolumeClaim:
             claimName: qbittorrent
         - name: downloads

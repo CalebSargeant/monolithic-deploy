@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: prowlarr
-          image: linuxserver/prowlarr:arm64-1.27.0
+          image: linuxserver/prowlarr:1.27.0
           ports:
             - containerPort: 9696 # Prowlarr web interface
           env:
@@ -27,8 +27,8 @@ spec:
               value: "Europe/Amsterdam" # Replace with your timezone
           volumeMounts:
             - mountPath: /config
-              name: config
+              name: prowlarr
       volumes:
-        - name: config
+        - name: prowlarr
           persistentVolumeClaim:
             claimName: prowlarr
