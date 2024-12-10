@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qbittorrent
+  namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qbittorrent
+  template:
+    metadata:
+      labels:
+        app: qbittorrent
+    spec:
+      containers:
+        - name: qbittorrent
+          image: linuxserver/qbittorrent:5.0.2
+          ports:
+            - containerPort: 8080 # Web UI
+            - containerPort: 6881 # BitTorrent (TCP/UDP)
+          env:
+            - name: PUID
+              value: "1000" # Replace with your user ID
+            - name: PGID
+              value: "1000" # Replace with your group ID
+            - name: TZ
+              value: "Europe/Amsterdam" # Replace with your timezone
+            - name: WEBUI_PORT
+              value: "8080" # Set qBittorrent Web UI port
+          volumeMounts:
+            - mountPath: /config
+              name: config
+            - mountPath: /downloads
+              name: downloads
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: qbittorrent
+        - name: downloads
+          persistentVolumeClaim:
+            claimName: downloads
