@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: radarr
-          image: linuxserver/radarr:arm64v8-5.15.1
+          image: linuxserver/radarr:arm64-5.15.1
           ports:
             - containerPort: 7878 # Radarr web interface
           env:
