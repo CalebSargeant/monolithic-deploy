@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radarr
+  namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: radarr
+  template:
+    metadata:
+      labels:
+        app: radarr
+    spec:
+      containers:
+        - name: radarr
+          image: linuxserver/radarr:5.15.1
+          ports:
+            - containerPort: 7878 # Radarr web interface
+          env:
+            - name: PUID
+              value: "1000" # Replace with your user ID
+            - name: PGID
+              value: "1000" # Replace with your group ID
+            - name: TZ
+              value: "Europe/Amsterdam" # Replace with your timezone
+          volumeMounts:
+            - mountPath: /config
+              name: config
+            - mountPath: /movies
+              name: movies
+            - mountPath: /downloads
+              name: downloads
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: radarr
+        - name: movies
+          persistentVolumeClaim:
+            claimName: movies
+        - name: downloads
+          persistentVolumeClaim:
+            claimName: downloads
