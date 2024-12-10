@@ -15,12 +15,20 @@ spec:
     spec:
       containers:
         - name: plex
-          image: plexinc/pms-docker:latest
+          image: linuxserver/plex:1.41.2
           ports:
             - containerPort: 32400 # Plex web interface
           env:
+            - name: PUID
+              value: "1000" # Update with your user ID
+            - name: PGID
+              value: "1000" # Update with your group ID
+            - name: TZ
+              value: "Europe/Amsterdam" # Set your timezone
+            - name: VERSION
+              value: docker # Optional: stick to the Docker version
             - name: PLEX_CLAIM
-              value: "claim-tTeSNVivBotSL1sFsFWF" # Optional, get a claim token from https://www.plex.tv/claim
+              value: "claim-gFzbfycH69QHpFnT9J4F" # Optional, get a claim token from https://www.plex.tv/claim
           volumeMounts:
             - mountPath: /config
               name: plex
