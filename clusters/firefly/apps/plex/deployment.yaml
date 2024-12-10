@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: plex
-  namespace: plex
+  namespace: media
 spec:
   replicas: 1
   selector:
@@ -20,7 +20,7 @@ spec:
             - containerPort: 32400 # Plex web interface
           env:
             - name: PLEX_CLAIM
-              value: "claim-sS4YYVnKtpsp7roc88Xh" # Optional, get a claim token from https://www.plex.tv/claim
+              value: "claim-moPSssxX-Wtgtsvfh6P5" # Optional, get a claim token from https://www.plex.tv/claim
           volumeMounts:
             - mountPath: /config
               name: plex-pvc
