@@ -7,13 +7,16 @@ spec:
   selector:
     app: qbittorrent
   ports:
-    - protocol: TCP
+    - name: web-ui
+      protocol: TCP
       port: 8080
       targetPort: 8080 # Web UI
-    - protocol: TCP
+    - name: bittorrent-tcp
+      protocol: TCP
       port: 6881
       targetPort: 6881 # BitTorrent TCP
-    - protocol: UDP
+    - name: bittorrent-udp
+      protocol: UDP
       port: 6881
       targetPort: 6881 # BitTorrent UDP
   type: ClusterIP
