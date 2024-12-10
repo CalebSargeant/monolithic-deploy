@@ -20,7 +20,7 @@ spec:
             - containerPort: 32400 # Plex web interface
           env:
             - name: PLEX_CLAIM
-              value: "claim-tYxxT3PRyVxsmSnU8srr" # Optional, get a claim token from https://www.plex.tv/claim
+              value: "claim-tTeSNVivBotSL1sFsFWF" # Optional, get a claim token from https://www.plex.tv/claim
           volumeMounts:
             - mountPath: /config
               name: plex
@@ -29,7 +29,7 @@ spec:
             - mountPath: /series
               name: series
       volumes:
-        - name: config
+        - name: plex
           persistentVolumeClaim:
             claimName: plex
         - name: movies
