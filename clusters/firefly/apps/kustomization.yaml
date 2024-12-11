@@ -11,3 +11,4 @@ resources:
   - qbittorrent
   - sonarr
   - homebridge
+  - jackett
