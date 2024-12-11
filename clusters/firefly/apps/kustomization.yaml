@@ -6,7 +6,7 @@ resources:
   - cert-manager
   - nginx
   - plex
-#  - radarr
+  - radarr
 #  - prowlarr
 #  - qbittorrent
 #  - sonarr
