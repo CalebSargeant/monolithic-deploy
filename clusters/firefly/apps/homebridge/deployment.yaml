@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homebridge
+  namespace: homebridge
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: homebridge
+  template:
+    metadata:
+      labels:
+        app: homebridge
+    spec:
+      hostNetwork: true # Use host networking
+      dnsPolicy: ClusterFirstWithHostNet # Adjust DNS policy for host networking
+      containers:
+        - name: homebridge
+          image: homebridge/homebridge:2024-11-29
+          ports:
+            - containerPort: 8581 # Homebridge web UI
+          env:
+            - name: TZ
+              value: "Europe/Amsterdam" # Replace with your timezone
+          volumeMounts:
+            - mountPath: /homebridge
+              name: homebridge
+      volumes:
+        - name: homebridge
+          persistentVolumeClaim:
+            claimName: homebridge

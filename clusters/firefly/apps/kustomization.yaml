@@ -9,3 +9,5 @@ resources:
   - radarr
   - prowlarr
   - qbittorrent
+  - sonarr
+  - homebridge
