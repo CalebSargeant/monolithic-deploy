@@ -19,9 +19,12 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: homebridge-service
-                port:
-                  number: 8581
+                - name: homebridge-service
+                  port:
+                    number: 8581
+                - name: homebridge-51826
+                  port:
+                    number: 51826
 
   tls:
     - hosts:
