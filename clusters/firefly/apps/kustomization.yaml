@@ -5,10 +5,10 @@ metadata:
 resources:
   - cert-manager
   - nginx
-  - plex
-  - radarr
-  - prowlarr
-  - qbittorrent
-  - sonarr
-  - homebridge
-  - jackett
+#  - plex
+#  - radarr
+#  - prowlarr
+#  - qbittorrent
+#  - sonarr
+#  - homebridge
+#  - jackett

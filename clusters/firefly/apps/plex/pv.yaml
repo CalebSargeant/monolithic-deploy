@@ -10,7 +10,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: manual
+  storageClassName: plex
   hostPath:
     path: /mnt/nvme/plex-config
 ---
@@ -26,7 +26,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: manual
+  storageClassName: movies
   hostPath:
     path: /mnt/raid/movies
 ---
@@ -42,7 +42,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: manual
+  storageClassName: series
   hostPath:
     path: /mnt/raid/series
 ---
@@ -58,6 +58,6 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: manual
+  storageClassName: downloads
   hostPath:
     path: /mnt/nvme/downloads
