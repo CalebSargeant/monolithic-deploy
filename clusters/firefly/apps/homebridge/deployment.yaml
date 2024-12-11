@@ -13,16 +13,15 @@ spec:
       labels:
         app: homebridge
     spec:
-#      hostNetwork: true # Use host networking
-#      dnsPolicy: ClusterFirstWithHostNet # Adjust DNS policy for host networking
       containers:
         - name: homebridge
           image: homebridge/homebridge:2024-11-29
           ports:
+            - containerPort: 51826 # HomeKit API
             - containerPort: 8581 # Homebridge web UI
           env:
             - name: TZ
-              value: "Europe/Amsterdam" # Replace with your timezone
+              value: "Europe/Amsterdam" # Adjust timezone
           volumeMounts:
             - mountPath: /homebridge
               name: homebridge
