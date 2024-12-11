@@ -8,7 +8,7 @@ resources:
   - plex
   - radarr
 #  - prowlarr
-#  - qbittorrent
-#  - sonarr
-#  - homebridge
-#  - jackett
+  - qbittorrent
+  - sonarr
+  - homebridge
+  - jackett
