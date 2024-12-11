@@ -18,7 +18,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: prowlarr-service
+                name: prowlarr
                 port:
                   number: 9696
   tls:

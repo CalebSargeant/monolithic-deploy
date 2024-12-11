@@ -5,9 +5,9 @@ metadata:
   namespace: homebridge
   annotations:
     kubernetes.io/ingress.class: traefik
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.tcp: "true"
     traefik.ingress.kubernetes.io/service.serversscheme: http
+    traefik.ingress.kubernetes.io/entrypoints: websecure,tcp
+    traefik.ingress.kubernetes.io/router.tcp: "true"
   labels:
     app: homebridge
 spec:
@@ -19,7 +19,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: homebridge-service
+                name: homebridge
                 port:
                   number: 8581
 ---
@@ -40,6 +40,6 @@ spec:
     - host: homebridge-hap.sargeant.co
       backend:
         service:
-          name: homebridge-service
+          name: homebridge
           port:
             number: 51826
