@@ -13,8 +13,8 @@ spec:
       labels:
         app: homebridge
     spec:
-      hostNetwork: true # Use host networking
-      dnsPolicy: ClusterFirstWithHostNet # Adjust DNS policy for host networking
+#      hostNetwork: true # Use host networking
+#      dnsPolicy: ClusterFirstWithHostNet # Adjust DNS policy for host networking
       containers:
         - name: homebridge
           image: homebridge/homebridge:2024-11-29
