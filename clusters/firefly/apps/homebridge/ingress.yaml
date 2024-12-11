@@ -7,7 +7,7 @@ metadata:
     kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tcp: "true"
-    traefik.ingress.kubernetes.io/service.serversscheme: tcp
+    traefik.ingress.kubernetes.io/service.serversscheme: http
   labels:
     app: homebridge
 spec:
