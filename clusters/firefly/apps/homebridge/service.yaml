@@ -7,10 +7,12 @@ spec:
   selector:
     app: homebridge
   ports:
-    - protocol: TCP
+    - name: homebridge-51826
+      protocol: TCP
       port: 51826
       targetPort: 51826 # HomeKit API
-    - protocol: TCP
+    - name: homebridge-8581
+      protocol: TCP
       port: 8581
       targetPort: 8581 # Web UI
   type: ClusterIP
