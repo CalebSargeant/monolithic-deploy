@@ -9,6 +9,7 @@ spec:
   resources:
     requests:
       storage: 500Gi
+  storageClassName: plex
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -21,7 +22,7 @@ spec:
   resources:
     requests:
       storage: 100Ti
-  storageClassName: manual
+  storageClassName: movies
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -34,7 +35,7 @@ spec:
   resources:
     requests:
       storage: 100Ti
-  storageClassName: manual
+  storageClassName: series
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -47,4 +48,4 @@ spec:
   resources:
     requests:
       storage: 500Gi
-  storageClassName: manual
+  storageClassName: downloads
