@@ -5,12 +5,15 @@ metadata:
   namespace: homebridge
   annotations:
     kubernetes.io/ingress.class: traefik
-    traefik.ingress.kubernetes.io/service.serversscheme: http
-    traefik.ingress.kubernetes.io/entrypoints: websecure,tcp
-    traefik.ingress.kubernetes.io/router.tcp: "true"
+    traefik.ingress.kubernetes.io/service.serversscheme: https
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure,tcp
+    traefik.ingress.kubernetes.io/router.tls: "true"
   labels:
     app: homebridge
 spec:
+  tls:
+    - hosts:
+        - homebridge.sargeant.co
   rules:
     - host: homebridge.sargeant.co
       http:

@@ -1,0 +1,35 @@
+---
+- name: Add A DNS records
+  community.routeros.command:
+    commands: "/ip dns static add name={{ item.name }}.{{ domain }} address={{ item.address }}"
+  with_items:
+    - { name: "vpn", address: "{{ router_ip }}" }
+    - { name: "{{ k3s_name }}", address: "{{ k3s_ip }}" }
+
+- name: Add CNAME DNS records
+  community.routeros.command:
+    commands: "/ip dns static add name={{ item.name }}.{{ domain }} cname={{ item.cname }}.{{ domain }}"
+  with_items:
+    - { name: "radarr", cname: "{{ k3s_name }}" }
+    - { name: "sonarr", cname: "{{ k3s_name }}" }
+    - { name: "prowlarr", cname: "{{ k3s_name }}" }
+    - { name: "readarr", cname: "{{ k3s_name }}" }
+    - { name: "bazarr", cname: "{{ k3s_name }}" }
+    - { name: "jackett", cname: "{{ k3s_name }}" }
+    - { name: "qbittorrent", cname: "{{ k3s_name }}" }
+    - { name: "homebridge", cname: "{{ k3s_name }}" }
+    - { name: "photos", cname: "{{ k3s_name }}" }
+    - { name: "wetty", cname: "{{ k3s_name }}" }
+    - { name: "heimdall", cname: "{{ k3s_name }}" }
+    - { name: "adguard", cname: "{{ k3s_name }}" }
+    - { name: "traefik", cname: "{{ k3s_name }}" }
+    - { name: "plex", cname: "{{ k3s_name }}" }
+    - { name: "tautulli", cname: "{{ k3s_name }}" }
+    - { name: "ombi", cname: "{{ k3s_name }}" }
+    - { name: "grafana", cname: "{{ k3s_name }}" }
+    - { name: "prometheus", cname: "{{ k3s_name }}" }
+    - { name: "alertmanager", cname: "{{ k3s_name }}" }
+    - { name: "n8n", cname: "{{ k3s_name }}" }
+    - { name: "cloud", cname: "{{ k3s_name }}" }
+    - { name: "desktop", cname: "{{ k3s_name }}" }
+    - { name: "nzbget", cname: "{{ k3s_name }}" }

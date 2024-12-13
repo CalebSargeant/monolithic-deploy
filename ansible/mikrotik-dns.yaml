@@ -1,0 +1,7 @@
+---
+- hosts: mikrotik
+  gather_facts: no
+  vars_files:
+  - vars/mikrotik.yaml
+  roles:
+    - mikrotik-dns
