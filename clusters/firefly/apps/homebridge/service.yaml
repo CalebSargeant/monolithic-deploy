@@ -9,6 +9,6 @@ spec:
   ports:
     - name: homebridge
       protocol: TCP
-      port: 8581
+      port: 80
       targetPort: 8581 # Web UI
   type: ClusterIP
