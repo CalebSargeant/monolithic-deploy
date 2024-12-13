@@ -4,9 +4,11 @@ metadata:
   name: homebridge
   namespace: homebridge
 spec:
-  type: ExternalName
-  externalName: 192.168.19.10
+  type: NodePort
   ports:
     - name: http
       port: 8581
       targetPort: 8581
+      nodePort: 30081 # Fixed port for external access
+  selector:
+    app: homebridge
