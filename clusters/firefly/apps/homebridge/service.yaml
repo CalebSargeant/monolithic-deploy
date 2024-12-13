@@ -4,11 +4,9 @@ metadata:
   name: homebridge
   namespace: homebridge
 spec:
-  selector:
-    app: homebridge
+  type: ExternalName
+  externalName: localhost
   ports:
-    - name: homebridge
-      protocol: TCP
-      port: 80
-      targetPort: 8581 # Web UI
-  type: ClusterIP
+    - name: http
+      port: 8581
+      targetPort: 8581
