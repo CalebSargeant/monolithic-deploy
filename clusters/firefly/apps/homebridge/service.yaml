@@ -4,11 +4,10 @@ metadata:
   name: homebridge
   namespace: homebridge
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
     - name: http
       port: 8581
       targetPort: 8581
-      nodePort: 30081 # Fixed port for external access
   selector:
     app: homebridge
