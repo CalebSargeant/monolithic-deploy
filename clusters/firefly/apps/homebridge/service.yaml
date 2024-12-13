@@ -11,4 +11,4 @@ spec:
       protocol: TCP
       port: 8581
       targetPort: 8581 # Web UI
-  type: LoadBalancer
+  type: ClusterIP
