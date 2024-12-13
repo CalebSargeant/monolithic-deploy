@@ -16,6 +16,7 @@ spec:
   tls:
     - hosts:
         - homebridge.sargeant.co
+      secretName: homebridge-tls
   rules:
     - host: homebridge.sargeant.co
       http:
