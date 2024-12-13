@@ -5,7 +5,7 @@ metadata:
   namespace: homebridge
 spec:
   type: ExternalName
-  externalName: localhost
+  externalName: homebridge.sargeant.co
   ports:
     - name: http
       port: 8581
