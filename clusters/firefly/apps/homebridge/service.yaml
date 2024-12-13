@@ -4,10 +4,10 @@ metadata:
   name: homebridge
   namespace: homebridge
 spec:
-  type: NodePort
-  ports:
-    - name: http
-      port: 8581
-      targetPort: 8581
   selector:
     app: homebridge
+  ports:
+    - name: web-ui
+      protocol: TCP
+      port: 8581
+      targetPort: 8581
