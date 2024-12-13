@@ -3,12 +3,10 @@ kind: ClusterIssuer
 metadata:
   name: letsencrypt-dns
   namespace: cert-manager
-  labels:
-
 spec:
   acme:
     email: caleb.sargeant@icloud.com
-    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: letsencrypt-private-key
     solvers:
