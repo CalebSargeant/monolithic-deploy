@@ -12,3 +12,4 @@ resources:
   - sonarr
   - homebridge
   - jackett
+  - bazarr
