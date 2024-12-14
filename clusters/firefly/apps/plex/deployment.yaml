@@ -28,7 +28,7 @@ spec:
             - name: VERSION
               value: docker # Optional: stick to the Docker version
             - name: PLEX_CLAIM
-              value: "claim-gFzbfycH69QHpFnT9J4F" # Optional, get a claim token from https://www.plex.tv/claim
+              value: "claim-NLroaq6PN_ax3fp6JqzK" # Optional, get a claim token from https://www.plex.tv/claim
           volumeMounts:
             - mountPath: /config
               name: plex
