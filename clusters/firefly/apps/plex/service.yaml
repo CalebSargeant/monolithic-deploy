@@ -18,7 +18,7 @@ spec:
 #      targetPort: 5353
 #    - protocol: TCP
 #      port: 8324
-      targetPort: 8324
+#      targetPort: 8324
     - protocol: UDP
       port: 32410
       targetPort: 32410
