@@ -13,6 +13,8 @@ spec:
       labels:
         app: plex
     spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet # Adjust DNS policy when using host networking
       containers:
         - name: plex
           image: linuxserver/plex:1.41.2
