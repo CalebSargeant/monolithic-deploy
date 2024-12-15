@@ -43,4 +43,4 @@ spec:
 #      protocol: TCP
 #      port: 32469
 #      targetPort: 32469
-  type: LoadBalancer
+#  type: LoadBalancer
