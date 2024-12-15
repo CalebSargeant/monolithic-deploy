@@ -13,9 +13,9 @@ spec:
     - protocol: UDP
       port: 1900
       targetPort: 1900
-    - protocol: UDP
-      port: 5353
-      targetPort: 5353
+#    - protocol: UDP
+#      port: 5353
+#      targetPort: 5353
     - protocol: TCP
       port: 8324
       targetPort: 8324
@@ -31,7 +31,7 @@ spec:
     - protocol: UDP
       port: 32414
       targetPort: 32414
-    - protocol: TCP
-      port: 32469
-      targetPort: 32469
+#    - protocol: TCP
+#      port: 32469
+#      targetPort: 32469
   type: LoadBalancer
