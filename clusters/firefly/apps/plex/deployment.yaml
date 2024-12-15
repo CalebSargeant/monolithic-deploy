@@ -18,7 +18,7 @@ spec:
           image: linuxserver/plex:1.41.2
           ports:
             - containerPort: 32400 # Plex web interface
-            - containerPort: 1900  # Plex DLNA server
+#            - containerPort: 1900  # Plex DLNA server
 #            - containerPort: 5353  # Bonjour/Avahi
 #            - containerPort: 8324  # Plex Roku Companion
             - containerPort: 32410 # GDM network discovery
