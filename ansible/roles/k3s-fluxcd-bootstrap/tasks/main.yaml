@@ -134,6 +134,23 @@
 #  loop_control:
 #    label: "Checking if GitRepository {{ item.name }} exists"
 
+
+#The Correct Way: Bootstrap Once, Then Add GitRepositories
+#
+#A cleaner and more maintainable way to achieve your goal is:
+#	1.	Bootstrap Flux only once using a single repository (e.g., monolithic-deploy or a dedicated “flux-system” repository).
+#	2.	Manage additional repositories (private-deploy, etc.) by defining GitRepository and Kustomization resources manually in the “source of truth” repository.
+#Why This Is the Right Way
+#	1.	Single Source of Truth:
+#	•	Only one repository (monolithic-deploy) bootstraps Flux and acts as the source of truth.
+#	•	All other repositories (private-deploy, etc.) are managed declaratively within this repository.
+#	2.	Avoids Name Conflicts:
+#	•	Each GitRepository and Kustomization gets a unique name (private-deploy, etc.).
+#	3.	Scalability:
+#	•	You can add as many repositories as you want by simply creating GitRepository and Kustomization resources.
+#	4.	Flux Best Practices:
+#	•	Aligns with how Flux is intended to work: one bootstrap repository and multiple managed sources.
+
 - name: Bootstrap Flux with GitHub repositories
   shell: |
     flux bootstrap github \
@@ -148,6 +165,5 @@
     KUBECONFIG: "/etc/rancher/k3s/k3s.yaml"
   loop:
     - { owner: "CalebSargeant", name: "monolithic-deploy", branch: "main", path: "clusters/firefly" }
-    - { owner: "CalebSargeant", name: "private-deploy", branch: "main", path: "clusters/firefly" }
   loop_control:
     label: "Bootstrapping {{ item.name }}"
