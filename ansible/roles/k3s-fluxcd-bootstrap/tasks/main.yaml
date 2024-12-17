@@ -15,15 +15,139 @@
   environment:
     KUBECONFIG: "/etc/rancher/k3s/k3s.yaml"
 
-- name: Bootstrap Flux with GitHub repository
+- name: Ensure SSH key pairs exist for Flux repositories
+  shell: |
+    ssh-keygen -t ed25519 -C "{{ item.name }}-flux" -N "" -f ~/.ssh/{{ item.name }}_ssh_key
+  args:
+    creates: "~/.ssh/{{ item.name }}_ssh_key"
+  loop:
+    - { name: "private-deploy", secret: "private-deploy-ssh-key" }
+    - { name: "monolithic-deploy", secret: "monolithic-deploy-ssh-key" }
+  loop_control:
+    label: "Generating SSH key for {{ item.name }}"
+
+- name: Fetch GitHub known_hosts
+  shell: |
+    ssh-keyscan github.com > ~/.ssh/github_known_hosts
+  args:
+    creates: "~/.ssh/github_known_hosts"
+
+- name: Create Kubernetes secrets for Flux SSH keys
+  shell: |
+    kubectl create secret generic {{ item.secret }} \
+      --namespace flux-system \
+      --from-file=identity=/root/.ssh/{{ item.name }}_ssh_key \
+      --from-file=known_hosts=/root/.ssh/github_known_hosts \
+      --dry-run=client -o yaml | kubectl apply -f -
+  loop:
+    - { name: "private-deploy", secret: "private-deploy-ssh-key" }
+    - { name: "monolithic-deploy", secret: "monolithic-deploy-ssh-key" }
+  loop_control:
+    label: "Creating secret {{ item.secret }}"
+
+#- name: Display public SSH keys for manual addition to GitHub
+#  shell: cat ~/.ssh/{{ item.name }}_ssh_key.pub
+#  loop:
+#    - { name: "private-deploy", secret: "private-deploy-ssh-key" }
+#    - { name: "monolithic-deploy", secret: "monolithic-deploy-ssh-key" }
+#  register: ssh_keys_public
+#  loop_control:
+#    label: "Displaying public key for {{ item.name }}"
+
+#- name: Print public SSH keys for GitHub
+#  debug:
+#    msg: "Public SSH key for {{ item.item.name }}:\n{{ item.stdout }}"
+#  with_items: "{{ ssh_keys.results }}"
+
+#- name: Check existing GitHub deploy keys
+#  uri:
+#    url: "https://api.github.com/repos/{{ item.owner }}/{{ item.name }}/keys"
+#    method: GET
+#    headers:
+#      Authorization: "token {{ github_token }}"
+#      Accept: "application/vnd.github.v3+json"
+#  register: existing_keys
+#  loop:
+#    - { owner: "CalebSargeant", name: "private-deploy" }
+#    - { owner: "CalebSargeant", name: "monolithic-deploy" }
+#  loop_control:
+#    label: "Fetching existing deploy keys for {{ item.name }}"
+
+- name: Fetch public SSH keys from target node
+  fetch:
+    src: "~/.ssh/{{ item.name }}_ssh_key.pub"
+    dest: "/tmp/{{ item.name }}_ssh_key.pub"
+    flat: yes
+  loop:
+    - { name: "private-deploy" }
+    - { name: "monolithic-deploy" }
+  loop_control:
+    label: "Fetching public key for {{ item.name }}"
+
+#- name: Check if SSH key already exists in GitHub repository
+#  uri:
+#    url: "https://api.github.com/repos/{{ item.owner }}/{{ item.name }}/keys"
+#    method: GET
+#    headers:
+#      Authorization: "token {{ github_token }}"
+#      Accept: "application/vnd.github.v3+json"
+#  register: existing_keys
+#  loop:
+#    - { owner: "CalebSargeant", name: "private-deploy" }
+#    - { owner: "CalebSargeant", name: "monolithic-deploy" }
+#  loop_control:
+#    label: "Checking existing keys for {{ item.name }}"
+
+- name: Add public SSH key to GitHub repository if not already present
+  uri:
+    url: "https://api.github.com/repos/{{ item.owner }}/{{ item.name }}/keys"
+    method: POST
+    body: >
+      {
+        "title": "{{ item.name }}-flux-deploy-key",
+        "key": "{{ lookup('file', '/tmp/{{ item.name }}_ssh_key.pub') }}",
+        "read_only": false
+      }
+    body_format: json
+    headers:
+      Authorization: "token {{ github_token }}"
+      Accept: "application/vnd.github.v3+json"
+    status_code: [200, 201]
+  failed_when: >
+    not ('key is already in use' in result.json.errors | map(attribute='message') | list | join(' '))
+  register: result
+  loop:
+    - { owner: "CalebSargeant", name: "private-deploy" }
+    - { owner: "CalebSargeant", name: "monolithic-deploy" }
+  loop_control:
+    label: "Adding deploy key to {{ item.name }}"
+
+#- name: Check if Flux GitRepository exists
+#  shell: |
+#    kubectl get gitrepository {{ item.name }} -n flux-system --ignore-not-found
+#  register: flux_repo_check
+#  failed_when: false
+#  changed_when: false
+#  loop:
+#    - { owner: "{{ github_user }}", name: "monolithic-deploy", branch: "main", path: "./clusters/firefly" }
+#    - { owner: "{{ github_user }}", name: "private-deploy", branch: "main", path: "./clusters/firefly" }
+#  loop_control:
+#    label: "Checking if GitRepository {{ item.name }} exists"
+
+- name: Bootstrap Flux with GitHub repositories
   shell: |
     flux bootstrap github \
-      --owner={{ flux_repo_owner }} \
-      --repository={{ flux_repo_name }} \
-      --branch={{ flux_repo_branch }} \
-      --path={{ flux_repo_path }} \
+      --owner={{ item.owner }} \
+      --repository={{ item.name }} \
+      --branch={{ item.branch }} \
+      --path={{ item.path }} \
       --personal \
       --force
   environment:
     GITHUB_TOKEN: "{{ github_token }}"
     KUBECONFIG: "/etc/rancher/k3s/k3s.yaml"
+  loop:
+    - { owner: "CalebSargeant", name: "monolithic-deploy", branch: "main", path: "clusters/firefly" }
+    - { owner: "CalebSargeant", name: "private-deploy", branch: "main", path: "clusters/firefly" }
+  loop_control:
+    label: "Bootstrapping {{ item.name }}"
