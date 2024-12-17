@@ -1,11 +1,11 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
-  name: apps
+  name: private-apps
   namespace: flux-system
 spec:
   interval: 1m
-  url: ssh://git@github.com/CalebSargeant/monolithic-deploy
+  url: ssh://git@github.com/CalebSargeant/private-deploy
   ref:
     branch: main
   secretRef:
@@ -24,6 +24,6 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: apps
+    name: private-apps
     namespace: flux-system
   timeout: 2m
