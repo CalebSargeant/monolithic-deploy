@@ -33,3 +33,4 @@
     - { name: "cloud", cname: "{{ k3s_name }}" }
     - { name: "desktop", cname: "{{ k3s_name }}" }
     - { name: "nzbget", cname: "{{ k3s_name }}" }
+    - { name: "uptime", cname: "{{ k3s_name }}" }

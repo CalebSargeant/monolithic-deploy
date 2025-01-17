@@ -21,7 +21,7 @@ spec:
               service:
                 name: prometheus
                 port:
-                  number: 3001
+                  number: 9090
   tls:
     - hosts:
         - prometheus.sargeant.co # Replace with your domain
