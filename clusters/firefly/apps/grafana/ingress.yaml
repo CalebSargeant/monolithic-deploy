@@ -21,7 +21,7 @@ spec:
               service:
                 name: grafana
                 port:
-                  number: 3001
+                  number: 3000
   tls:
     - hosts:
         - grafana.sargeant.co # Replace with your domain
