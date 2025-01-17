@@ -8,10 +8,11 @@ scrape_configs:
       - targets:
           - uptime-kuma.observability.svc.cluster.local:3001
 
-  - job_name: 'blackbox'
+  - job_name: 'ping'
     metrics_path: /probe
     params:
       module: [icmp]
+      scrape_interval: [1s]
     static_configs:
       - targets:
           - cocttmc.ddns.net
