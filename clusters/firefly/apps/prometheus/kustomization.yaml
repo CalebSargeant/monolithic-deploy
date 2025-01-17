@@ -11,3 +11,4 @@ configMapGenerator:
   - name: prometheus-config
     files:
       - prometheus.yaml
+    namespace: observability
