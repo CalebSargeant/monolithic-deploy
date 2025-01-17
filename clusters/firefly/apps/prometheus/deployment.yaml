@@ -24,7 +24,6 @@ spec:
           volumeMounts:
             - name: config-volume
               mountPath: /etc/prometheus
-              subPath: prometheus.yaml
       volumes:
         - name: config-volume
           configMap:
