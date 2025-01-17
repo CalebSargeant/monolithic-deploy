@@ -13,3 +13,4 @@ resources:
   - homebridge
   - jackett
   - bazarr
+  - uptime-kuma
