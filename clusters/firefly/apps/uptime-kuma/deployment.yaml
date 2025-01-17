@@ -28,7 +28,7 @@ spec:
 #              value: "Europe/Amsterdam" # Replace with your timezone
           volumeMounts:
             - mountPath: /app/data
-              name: uptime-kuma-data
+              name: uptime-kuma
       volumes:
         - name: uptime-kuma-data
           persistentVolumeClaim:
