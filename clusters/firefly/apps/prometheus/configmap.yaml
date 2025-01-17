@@ -4,5 +4,5 @@ metadata:
   name: prometheus-config
   namespace: observability
 data:
-  prometheus.yml: |
+  prometheus.yaml: |
     {{ .Files.Get "prometheus.yaml" }}

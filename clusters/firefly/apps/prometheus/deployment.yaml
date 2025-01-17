@@ -12,16 +12,19 @@ spec:
     metadata:
       labels:
         app: prometheus
+
     spec:
       containers:
         - name: prometheus
           image: prom/prometheus:v3.1.0
+          args:
+            - "--config.file=/etc/prometheus/prometheus.yaml"
           ports:
             - containerPort: 9090
           volumeMounts:
             - name: config-volume
               mountPath: /etc/prometheus
-              subPath: prometheus.yml
+              subPath: prometheus.yaml
       volumes:
         - name: config-volume
           configMap:
