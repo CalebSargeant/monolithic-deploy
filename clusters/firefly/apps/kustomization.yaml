@@ -14,3 +14,6 @@ resources:
   - jackett
   - bazarr
   - uptime-kuma
+  - prometheus
+  - blackbox-exporter
+  - grafana
