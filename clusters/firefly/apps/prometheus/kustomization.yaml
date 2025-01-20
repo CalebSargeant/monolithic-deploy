@@ -4,8 +4,8 @@ resources:
   - deployment.yaml
   - service.yaml
   - ingress.yaml
-#  - pvc.yaml
-#  - pv.yaml
+  - pvc.yaml
+  - pv.yaml
 #  - configmap.yaml
 configMapGenerator:
   - name: prometheus-config
