@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: blackbox-exporter-config
+  namespace: observability
+data:
+  blackbox-exporter.yml: |
+    modules:
+      icmp:
+        prober: icmp
+        timeout: 1s

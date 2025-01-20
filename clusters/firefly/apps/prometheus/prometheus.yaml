@@ -3,10 +3,10 @@ global:
   evaluation_interval: 15s
 
 scrape_configs:
-  - job_name: 'uptime-kuma'
-    static_configs:
-      - targets:
-          - uptime-kuma.observability.svc.cluster.local:3001
+#  - job_name: 'uptime-kuma'
+#    static_configs:
+#      - targets:
+#          - uptime-kuma.observability.svc.cluster.local:3001
 
   - job_name: 'ping'
     scrape_interval: 1s
@@ -20,6 +20,26 @@ scrape_configs:
           - mikrotik-prod-az.platform1.co.za
           - office.rubicscctv.net
           - hg409wxm9p6.sn.mynetname.net
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter.observability.svc.cluster.local:9115
+
+  - job_name: 'http'
+    scrape_interval: 10s
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+          - http://office.rubicscctv.net:8582
+#          - http://10.200.5.203:80
+#          - http://192.168.0.176:80
+          - http://hg409wxm9p6.sn.mynetname.net:5881
+          - http://lprcpthkromstuart.dvrdns.org:82
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
