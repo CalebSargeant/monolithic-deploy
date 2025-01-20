@@ -17,9 +17,12 @@ scrape_configs:
       - targets:
           - cocttmc.ddns.net
           - firewall.platform1.co.za
-          - mikrotik-prod-az.platform1.co.za
+#          - mikrotik-prod-az.platform1.co.za
           - office.rubicscctv.net
           - hg409wxm9p6.sn.mynetname.net
+          - lprcpthkromstuart.dvrdns.org
+          - hh00aeyd93x.sn.mynetname.net
+          - hh00aajb0r1.sn.mynetname.net
           - e34b0d323579.sn.mynetname.net
     relabel_configs:
       - source_labels: [__address__]
@@ -41,7 +44,12 @@ scrape_configs:
 #          - http://192.168.0.176:80
           - http://hg409wxm9p6.sn.mynetname.net:5881
           - http://lprcpthkromstuart.dvrdns.org:82
+          - http://hh00aeyd93x.sn.mynetname.net:8080
+          - http://hh00aajb0r1.sn.mynetname.net:8080
+          - http://hh00aajb0r1.sn.mynetname.net:8081
+          - http://hh00aajb0r1.sn.mynetname.net:8082
           - http://e34b0d323579.sn.mynetname.net:8101
+#          - http://10.200.5.216:80
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
