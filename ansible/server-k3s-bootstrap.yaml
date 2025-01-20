@@ -10,4 +10,4 @@
 #    - root-terminal-colours
 #    - k3s-ubuntu-install
     - k3s-fluxcd-bootstrap
-    - k3s-sops-age-secret
+#    - k3s-sops-age-secret

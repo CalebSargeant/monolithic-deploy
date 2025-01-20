@@ -1,0 +1,8 @@
+---
+- hosts: franklin
+  become: yes
+  become_method: sudo
+  vars_files:
+  - vars/server.yaml
+  roles:
+    - k3s-fluxcd-reconcile
