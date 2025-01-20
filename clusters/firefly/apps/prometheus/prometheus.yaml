@@ -20,6 +20,7 @@ scrape_configs:
           - mikrotik-prod-az.platform1.co.za
           - office.rubicscctv.net
           - hg409wxm9p6.sn.mynetname.net
+          - e34b0d323579.sn.mynetname.net
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
@@ -40,6 +41,7 @@ scrape_configs:
 #          - http://192.168.0.176:80
           - http://hg409wxm9p6.sn.mynetname.net:5881
           - http://lprcpthkromstuart.dvrdns.org:82
+          - http://e34b0d323579.sn.mynetname.net:8101
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
