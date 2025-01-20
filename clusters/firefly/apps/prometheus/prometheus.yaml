@@ -18,6 +18,8 @@ scrape_configs:
           - cocttmc.ddns.net
           - firewall.platform1.co.za
           - mikrotik-prod-az.platform1.co.za
+          - office.rubicscctv.net
+          - hg409wxm9p6.sn.mynetname.net
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
