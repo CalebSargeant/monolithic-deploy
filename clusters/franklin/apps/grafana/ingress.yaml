@@ -12,7 +12,7 @@ metadata:
     app: grafana
 spec:
   rules:
-    - host: grafana.sargeant.co # Replace with your domain
+    - host: grafana.franklinhouse.co.za # Replace with your domain
       http:
         paths:
           - path: /
@@ -24,5 +24,5 @@ spec:
                   number: 3000
   tls:
     - hosts:
-        - grafana.sargeant.co # Replace with your domain
+        - grafana.franklinhouse.co.za # Replace with your domain
       secretName: grafana-tls # Secret for TLS certificate

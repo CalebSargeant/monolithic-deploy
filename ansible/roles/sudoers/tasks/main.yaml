@@ -1,0 +1,7 @@
+- name: Ensure the user has sudo privileges without password
+  copy:
+    dest: /etc/sudoers.d/{{ ansible_ssh_user }}
+    content: "{{ ansible_ssh_user }} ALL=(ALL) NOPASSWD:ALL"
+    owner: root
+    group: root
+    mode: '0440'

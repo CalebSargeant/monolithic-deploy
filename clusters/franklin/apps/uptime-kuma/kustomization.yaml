@@ -6,9 +6,4 @@ resources:
   - ingress.yaml
   - pvc.yaml
   - pv.yaml
-#  - configmap.yaml
-configMapGenerator:
-  - name: prometheus-config
-    files:
-      - prometheus.yaml
-    namespace: observability
+  - namespace.yaml

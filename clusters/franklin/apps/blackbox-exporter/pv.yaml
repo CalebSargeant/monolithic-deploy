@@ -11,4 +11,4 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: blackbox-exporter
   hostPath:
-    path: /mnt/nvme/blackbox-exporter-config
+    path: /mnt/data/blackbox-exporter-config

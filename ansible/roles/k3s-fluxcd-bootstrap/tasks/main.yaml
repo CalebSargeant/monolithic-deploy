@@ -164,6 +164,6 @@
     GITHUB_TOKEN: "{{ github_token }}"
     KUBECONFIG: "/etc/rancher/k3s/k3s.yaml"
   loop:
-    - { owner: "CalebSargeant", name: "monolithic-deploy", branch: "main", path: "clusters/firefly" }
+    - { owner: "CalebSargeant", name: "monolithic-deploy", branch: "main", path: "clusters/{{ k3s_cluster_name }}" }
   loop_control:
     label: "Bootstrapping {{ item.name }}"

@@ -1,0 +1,13 @@
+---
+- hosts: franklin
+  become: yes
+  become_method: sudo
+  vars_files:
+  - vars/franklin.yaml
+  roles:
+#    - sudoers
+#    - apt-update-upgrade
+#    - root-terminal-colours
+#    - k3s-ubuntu-install
+    - k3s-fluxcd-bootstrap
+    - k3s-sops-age-secret
