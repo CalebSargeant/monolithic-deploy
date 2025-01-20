@@ -24,6 +24,8 @@ scrape_configs:
           - hh00aeyd93x.sn.mynetname.net
           - hh00aajb0r1.sn.mynetname.net
           - e34b0d323579.sn.mynetname.net
+          - gscid-vet.lpr.camera
+          - hh00ac8tkjn.sn.mynetname.net
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
@@ -49,6 +51,8 @@ scrape_configs:
           - http://hh00aajb0r1.sn.mynetname.net:8081
           - http://hh00aajb0r1.sn.mynetname.net:8082
           - http://e34b0d323579.sn.mynetname.net:8101
+          - http://gscid-vet.lpr.camera:5880
+          - http://hh00ac8tkjn.sn.mynetname.net:8080
 #          - http://10.200.5.216:80
     relabel_configs:
       - source_labels: [__address__]
