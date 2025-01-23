@@ -17,7 +17,7 @@ scrape_configs:
       - targets:
           - cocttmc.ddns.net
           - firewall.platform1.co.za
-#          - mikrotik-prod-az.platform1.co.za
+          - mikrotik-prod-az.platform1.co.za
           - office.rubicscctv.net
           - hg409wxm9p6.sn.mynetname.net
           - lprcpthkromstuart.dvrdns.org
