@@ -18,6 +18,8 @@ scrape_configs:
           - cocttmc.ddns.net
           - firewall.platform1.co.za
           - mikrotik-prod-az.platform1.co.za
+          - 105.28.119.49 # Office Seacom
+          - 105.28.119.50 # Office FW
           - office.rubicscctv.net
           - hg409wxm9p6.sn.mynetname.net
           - lprcpthkromstuart.dvrdns.org
