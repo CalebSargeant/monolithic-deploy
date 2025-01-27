@@ -28,6 +28,7 @@ scrape_configs:
           - e34b0d323579.sn.mynetname.net
           - gscid-vet.lpr.camera
           - hh00ac8tkjn.sn.mynetname.net
+          - lprcptthomas.dvrdns.org
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
@@ -55,6 +56,7 @@ scrape_configs:
           - http://e34b0d323579.sn.mynetname.net:8101
           - http://gscid-vet.lpr.camera:5880
           - http://hh00ac8tkjn.sn.mynetname.net:8080
+          - http://lprcptthomas.dvrdns.org:82
 #          - http://10.200.5.216:80
     relabel_configs:
       - source_labels: [__address__]
