@@ -45,6 +45,7 @@ scrape_configs:
     static_configs:
       - targets:
           - http://office.rubicscctv.net:8582
+          - http://office.rubicscctv.net:8587
 #          - http://10.200.5.203:80
 #          - http://192.168.0.176:80
           - http://hg409wxm9p6.sn.mynetname.net:5881
