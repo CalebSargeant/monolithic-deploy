@@ -13,7 +13,8 @@ resources:
   - homebridge
   - jackett
   - bazarr
-  - uptime-kuma
+#  - uptime-kuma
   - prometheus
   - blackbox-exporter
   - grafana
+  - n8n

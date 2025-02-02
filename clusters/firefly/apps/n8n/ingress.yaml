@@ -1,28 +1,28 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: uptime-kuma-ingress
-  namespace: observability
+  name: n8n-ingress
+  namespace: automation
   annotations:
     kubernetes.io/ingress.class: traefik
     cert-manager.io/cluster-issuer: letsencrypt-dns
     traefik.ingress.kubernetes.io/service.serversscheme: http
     traefik.ingress.kubernetes.io/entrypoints: websecure
   labels:
-    app: uptime-kuma
+    app: n8n
 spec:
   rules:
-    - host: uptime.sargeant.co
+    - host: n8n.sargeant.co
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: uptime-kuma
+                name: n8n
                 port:
-                  number: 3001
+                  number: 5678
   tls:
     - hosts:
-        - uptime.sargeant.co
-      secretName: uptime-kuma-tls
+        - n8n.sargeant.co
+      secretName: n8n-tls
