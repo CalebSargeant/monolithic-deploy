@@ -17,4 +17,4 @@ resources:
   - prometheus
   - blackbox-exporter
   - grafana
-  - n8n
+#  - n8n
