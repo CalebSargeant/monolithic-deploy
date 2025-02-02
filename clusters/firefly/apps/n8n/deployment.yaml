@@ -23,18 +23,18 @@ spec:
               value: "true"
             - name: N8N_BASIC_AUTH_USER
               value: "admin"
-            - name: N8N_BASIC_AUTH_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: n8n-secret
-                  key: password
+#            - name: N8N_BASIC_AUTH_PASSWORD
+#              valueFrom:
+#                secretKeyRef:
+#                  name: n8n-secret
+#                  key: password
             - name: DB_TYPE
               value: "sqlite"
             - name: N8N_LOG_LEVEL
               value: "info"
           volumeMounts:
-            - mountPath: /home/node/.n8n
-              name: n8n
+            - name: n8n
+              mountPath: /home/node/.n8n
       volumes:
         - name: n8n
           persistentVolumeClaim:
