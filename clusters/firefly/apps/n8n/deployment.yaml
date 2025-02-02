@@ -25,6 +25,8 @@ spec:
               value: "admin"
             - name: WEBHOOK_URL
               value: "https://n8n.sargeant.co"
+            - name: N8N_HOST
+              value: "n8n.sargeant.co"
 #            - name: N8N_BASIC_AUTH_PASSWORD
 #              valueFrom:
 #                secretKeyRef:
