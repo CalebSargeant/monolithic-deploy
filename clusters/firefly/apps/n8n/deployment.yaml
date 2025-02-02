@@ -34,8 +34,8 @@ spec:
               value: "info"
           volumeMounts:
             - mountPath: /home/node/.n8n
-              name: n8n-data
+              name: n8n
       volumes:
-        - name: n8n-data
+        - name: n8n
           persistentVolumeClaim:
-            claimName: n8n-data
+            claimName: n8n
