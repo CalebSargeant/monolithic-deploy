@@ -11,4 +11,4 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: n8n
   hostPath:
-    path: /mnt/nvme/n8n-config
+    path: /mnt/nvme/n8n
