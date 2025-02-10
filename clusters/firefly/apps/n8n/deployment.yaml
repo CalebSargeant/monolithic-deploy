@@ -16,8 +16,24 @@ spec:
       containers:
         - name: n8n
           image: n8nio/n8n:latest
-          ports:
-            - containerPort: 5678
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "Installing dependencies..."; \
+              apt-get update && apt-get install -y ffmpeg git curl build-essential npm python3 python3-pip; \
+              pip3 install html-pdf; \
+              
+              echo "Installing Whisper.cpp..."; \
+              git clone https://github.com/ggerganov/whisper.cpp.git /opt/whisper.cpp; \
+              cd /opt/whisper.cpp && make; \
+              
+              echo "Downloading Whisper models..."; \
+              cd /opt/whisper.cpp && ./models/download-ggml-model.sh tiny && ./models/download-ggml-model.sh base; \
+              
+              echo "All dependencies installed! Starting n8n..."; \
+              export PATH="/opt/whisper.cpp:$PATH"; \
+              export PYTHONPATH="/usr/local/lib/python3.*/site-packages"; \
+              n8n
           env:
             - name: N8N_BASIC_AUTH_ACTIVE
               value: "true"
@@ -27,11 +43,6 @@ spec:
               value: "https://n8n.sargeant.co"
             - name: N8N_HOST
               value: "n8n.sargeant.co"
-#            - name: N8N_BASIC_AUTH_PASSWORD
-#              valueFrom:
-#                secretKeyRef:
-#                  name: n8n-secret
-#                  key: password
             - name: DB_TYPE
               value: "sqlite"
             - name: N8N_LOG_LEVEL

@@ -1,0 +1,9 @@
+---
+- hosts: firefly
+  become: yes
+  become_method: sudo
+  vars_files:
+  - vars/pi.yaml
+  roles:
+    - apt-update-upgrade
+    - moonlight

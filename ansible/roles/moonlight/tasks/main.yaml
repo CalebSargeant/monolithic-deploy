@@ -1,0 +1,57 @@
+---
+- name: Ensure systemd directory exists for autologin configuration
+  file:
+    path: /etc/systemd/system/getty@tty1.service.d
+    state: directory
+    mode: '0755'
+
+- name: Create autologin configuration for tty1
+  copy:
+    dest: /etc/systemd/system/getty@tty1.service.d/autologin.conf
+    content: |
+      [Service]
+      ExecStart=
+      ExecStart=-/sbin/agetty --autologin {{ ansible_user }} --noclear %I \$TERM
+    mode: '0644'
+
+- name: Reload systemd daemon to apply changes
+  systemd:
+    daemon_reload: yes
+
+- name: Restart getty service for tty1
+  systemd:
+    name: getty@tty1.service
+    state: restarted
+
+- name: Add Moonlight-Qt repository
+  shell:
+    cmd: "curl -1sLf 'https://dl.cloudsmith.io/public/moonlight-game-streaming/moonlight-qt/setup.deb.sh' | distro=raspbian codename=$(lsb_release -cs) sudo -E bash"
+  args:
+    executable: /bin/bash
+
+- name: Install Moonlight
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - moonlight-qt
+
+- name: Ensure Moonlight is installed
+  shell:
+    cmd: "command -v moonlight-qt"
+  args:
+    executable: /bin/bash
+  register: moonlight_installed
+  ignore_errors: yes
+  changed_when: false
+
+- name: Fail if Moonlight is not installed
+  ansible.builtin.fail:
+    msg: "Moonlight-Qt is not installed. Please install it first."
+  when: moonlight_installed.rc != 0
+
+- name: Add Moonlight-Qt to crontab for autostart
+  ansible.builtin.cron:
+    name: "Start Moonlight-Qt at boot"
+    special_time: reboot
+    job: "MOONLIGHT_DISABLE_MDNS=1 moonlight-qt"
+    user: caleb
