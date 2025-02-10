@@ -19,30 +19,30 @@ spec:
           command: ["/bin/sh", "-c"]
           args:
             - |
-              echo "Installing dependencies..."; \
+              #echo "Installing dependencies..."; \
               apk add --no-cache ffmpeg git curl build-base npm make gcompat shadow chromium; \
               apk fix; \
               
-              echo "Installing Puppeteer in user-writable directory..."; \
-              mkdir -p /home/node/.npm-global; \
-              npm config set prefix "/home/node/.npm-global"; \
-              export PATH="/home/node/.npm-global/bin:$PATH"; \
+              #echo "Installing Puppeteer in user-writable directory..."; \
+              #mkdir -p /home/node/.npm-global; \
+              #npm config set prefix "/home/node/.npm-global"; \
+              #export PATH="/home/node/.npm-global/bin:$PATH"; \
               npm install -g puppeteer; \
               
-              echo "Installing Whisper.cpp..."; \
-              git clone https://github.com/ggerganov/whisper.cpp.git /home/node/whisper.cpp; \
-              cd /home/node/whisper.cpp && make; \
+              #echo "Installing Whisper.cpp..."; \
+              #git clone https://github.com/ggerganov/whisper.cpp.git /home/node/whisper.cpp; \
+              #cd /home/node/whisper.cpp && make; \
               
-              echo "Downloading Whisper models..."; \
-              cd /home/node/whisper.cpp/models && wget -O ggml-tiny.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin; \
-              wget -O ggml-base.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin; \
+              #echo "Downloading Whisper models..."; \
+              #cd /home/node/whisper.cpp/models && wget -O ggml-tiny.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin; \
+              #wget -O ggml-base.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin; \
               
-              echo "Fixing permissions and switching back to node user..."; \
-              chown -R node:node /home/node/.npm-global /home/node/whisper.cpp; \
+              #echo "Fixing permissions and switching back to node user..."; \
+              #chown -R node:node /home/node/.npm-global /home/node/whisper.cpp; \
               
-              echo "Setting up environment variables..."; \
-              export PATH="/home/node/.npm-global/bin:/home/node/whisper.cpp:$PATH"; \
-              export PYTHONPATH="/usr/lib/python3.*/site-packages"; \
+              #echo "Setting up environment variables..."; \
+              #export PATH="/home/node/.npm-global/bin:/home/node/whisper.cpp:$PATH"; \
+              #export PYTHONPATH="/usr/lib/python3.*/site-packages"; \
               
               echo "All dependencies installed! Switching to node user and starting n8n..."; \
               exec su node -c "n8n"
