@@ -20,19 +20,24 @@ spec:
           args:
             - |
               echo "Installing dependencies..."; \
-              apk add --no-cache ffmpeg git curl build-base python3 py3-pip nodejs npm; \
-              pip3 install html-pdf; \
+              apk add --no-cache ffmpeg git curl build-base python3 py3-pip npm make gcompat; \
+              
+              echo "Installing html-pdf..."; \
+              npm install -g html-pdf; \
               
               echo "Installing Whisper.cpp..."; \
               git clone https://github.com/ggerganov/whisper.cpp.git /home/node/whisper.cpp; \
               cd /home/node/whisper.cpp && make; \
               
               echo "Downloading Whisper models..."; \
-              cd /home/node/whisper.cpp && ./models/download-ggml-model.sh tiny && ./models/download-ggml-model.sh base; \
+              cd /home/node/whisper.cpp/models && wget -O ggml-tiny.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin; \
+              wget -O ggml-base.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin; \
               
-              echo "All dependencies installed! Starting n8n..."; \
+              echo "Setting up environment variables..."; \
               export PATH="/home/node/whisper.cpp:$PATH"; \
               export PYTHONPATH="/usr/lib/python3.*/site-packages"; \
+              
+              echo "All dependencies installed! Starting n8n..."; \
               n8n
           env:
             - name: N8N_BASIC_AUTH_ACTIVE
