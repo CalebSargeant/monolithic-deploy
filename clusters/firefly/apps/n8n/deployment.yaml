@@ -19,7 +19,7 @@ spec:
           command: ["/bin/sh", "-c"]
           args:
             - |
-              apk add --no-cache pandoc texlive texlive-xetex texlive-latexextra texmf-dist-latexextra
+              apk add --no-cache pandoc texlive texlive-xetex texlive-fontsrecommended
               exec su node -c "n8n"
           securityContext:
             runAsUser: 0  # Temporarily run as root for installation
