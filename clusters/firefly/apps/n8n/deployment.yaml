@@ -19,22 +19,8 @@ spec:
           command: ["/bin/sh", "-c"]
           args:
             - |
-              echo "Installing dependencies..."; \
-              apk add --no-cache chromium; \
-              
-              echo "Installing Puppeteer..."; \
-              mkdir -p /home/node/.npm-global; \
-              npm config set prefix "/home/node/.npm-global"; \
-              export PATH="/home/node/.npm-global/bin:$PATH"; \
-              npm install -g puppeteer; \
-              
-              echo "Setting Chromium path for Puppeteer..."; \
-              export PUPPETEER_EXECUTABLE_PATH="/usr/bin/chromium-browser"; \
-              
-              echo "All dependencies installed! Starting n8n..."; \
+              apk add --no-cache pandoc
               exec su node -c "n8n"
-          securityContext:
-            runAsUser: 0  # Temporarily run as root for installation
           env:
             - name: N8N_BASIC_AUTH_ACTIVE
               value: "true"
