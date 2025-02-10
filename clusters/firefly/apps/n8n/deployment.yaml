@@ -19,7 +19,8 @@ spec:
           command: ["/bin/sh", "-c"]
           args:
             - |
-              apk add --no-cache wkhtmltopdf
+              apk add --no-cache pandoc py3-pip
+              pip install weasyprint
               exec su node -c "n8n"
           securityContext:
             runAsUser: 0  # Temporarily run as root for installation
