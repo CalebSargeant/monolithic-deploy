@@ -19,10 +19,13 @@ spec:
           command: ["/bin/sh", "-c"]
           args:
             - |
-              echo "Installing dependencies..."; \
-              apk add --no-cache ffmpeg git curl build-base python3 py3-pip npm make gcompat; \
+              echo "Switching to root user to install dependencies..."; \
+              sudo apk add --no-cache ffmpeg git curl build-base python3 py3-pip npm make gcompat; \
               
-              echo "Installing html-pdf..."; \
+              echo "Installing html-pdf in user-writable directory..."; \
+              mkdir -p /home/node/.npm-global; \
+              npm config set prefix "/home/node/.npm-global"; \
+              export PATH="/home/node/.npm-global/bin:$PATH"; \
               npm install -g html-pdf; \
               
               echo "Installing Whisper.cpp..."; \
@@ -33,12 +36,17 @@ spec:
               cd /home/node/whisper.cpp/models && wget -O ggml-tiny.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-tiny.bin; \
               wget -O ggml-base.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.bin; \
               
+              echo "Fixing permissions and switching back to node user..."; \
+              chown -R node:node /home/node/.npm-global /home/node/whisper.cpp; \
+              
               echo "Setting up environment variables..."; \
-              export PATH="/home/node/whisper.cpp:$PATH"; \
+              export PATH="/home/node/.npm-global/bin:/home/node/whisper.cpp:$PATH"; \
               export PYTHONPATH="/usr/lib/python3.*/site-packages"; \
               
               echo "All dependencies installed! Starting n8n..."; \
-              n8n
+              exec su-exec node n8n
+          securityContext:
+            runAsUser: 0  # Temporarily run as root for installation
           env:
             - name: N8N_BASIC_AUTH_ACTIVE
               value: "true"
