@@ -20,14 +20,14 @@ spec:
           args:
             - |
               echo "Installing dependencies..."; \
-              apk add --no-cache ffmpeg git curl build-base python3 py3-pip npm make gcompat shadow; \
+              apk add --no-cache ffmpeg git curl build-base npm make gcompat shadow chromium; \
               apk fix; \
               
-              echo "Installing html-pdf in user-writable directory..."; \
+              echo "Installing Puppeteer in user-writable directory..."; \
               mkdir -p /home/node/.npm-global; \
               npm config set prefix "/home/node/.npm-global"; \
               export PATH="/home/node/.npm-global/bin:$PATH"; \
-              npm install -g html-pdf; \
+              npm install -g puppeteer; \
               
               echo "Installing Whisper.cpp..."; \
               git clone https://github.com/ggerganov/whisper.cpp.git /home/node/whisper.cpp; \
