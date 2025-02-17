@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: nextcloud
-          image: lscr.io/linuxserver/nextcloud:latest
+          image: linuxserver/nextcloud:arm64v8-30.0.6
           ports:
             - containerPort: 443
           env:
