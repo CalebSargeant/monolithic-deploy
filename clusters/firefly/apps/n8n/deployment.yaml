@@ -29,12 +29,9 @@ spec:
               #python3 -m venv venv
               #source venv/bin/activate
               
-              apk add --no-cache chromium ffmpeg git build-base cmake wget curl
+              apk add --no-cache chromium ffmpeg git build-base cmake wget curl openblas-dev
               
-              # Install OpenBLAS (for performance improvements)
-              apk add --no-cache openblas-dev
-              
-              # Clone whispercpp repo
+              # Clone whispercpp
               git clone https://github.com/ggerganov/whisper.cpp.git /opt/whispercpp
               cd /opt/whispercpp
               
@@ -42,14 +39,16 @@ spec:
               cmake -B build -DCMAKE_BUILD_TYPE=Release
               cmake --build build --parallel $(nproc)
               
-              # Move whisper binary to /usr/local/bin for global access
-              cp build/bin/whisper /usr/local/bin/whisper
+              # Check the actual location of the binary
+              find build/bin -type f
               
-              # Return to home directory and cleanup
-              cd ~
-              rm -rf /opt/whispercpp
+              # Move the correct binary to /usr/local/bin
+              cp build/bin/whisper-cli /usr/local/bin/whisper
               
-              # Start n8n as the node user
+              # Ensure it's executable
+              chmod +x /usr/local/bin/whisper
+              
+              # Start n8n
               exec su node -c "n8n"
           securityContext:
             runAsUser: 0  # Temporarily run as root for installation
