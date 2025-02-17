@@ -26,7 +26,30 @@ spec:
               #source venv/bin/activate
               #pip install weasyprint
               
-              apk add --no-cache chromium
+              #python3 -m venv venv
+              #source venv/bin/activate
+              
+              apk add --no-cache chromium ffmpeg git build-base cmake wget curl
+              
+              # Install OpenBLAS (for performance improvements)
+              apk add --no-cache openblas-dev
+              
+              # Clone whispercpp repo
+              git clone https://github.com/ggerganov/whisper.cpp.git /opt/whispercpp
+              cd /opt/whispercpp
+              
+              # Build whispercpp
+              cmake -B build -DCMAKE_BUILD_TYPE=Release
+              cmake --build build --parallel $(nproc)
+              
+              # Move whisper binary to /usr/local/bin for global access
+              cp build/bin/whisper /usr/local/bin/whisper
+              
+              # Return to home directory and cleanup
+              cd ~
+              rm -rf /opt/whispercpp
+              
+              # Start n8n as the node user
               exec su node -c "n8n"
           securityContext:
             runAsUser: 0  # Temporarily run as root for installation
