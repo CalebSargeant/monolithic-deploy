@@ -18,3 +18,4 @@ resources:
   - blackbox-exporter
   - grafana
   - n8n
+  - nextcloud
