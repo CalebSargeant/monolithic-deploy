@@ -6,9 +6,9 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: traefik
     cert-manager.io/cluster-issuer: letsencrypt-dns
-    traefik.ingress.kubernetes.io/service.serversscheme: http
+    traefik.ingress.kubernetes.io/service.serversscheme: https
     traefik.ingress.kubernetes.io/entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.tls.insecureSkipVerify: "true"
+    traefik.ingress.kubernetes.io/service.serverstransport: insecure-transport@kubernetescrd
   labels:
     app: nextcloud
 spec:
@@ -22,7 +22,7 @@ spec:
               service:
                 name: nextcloud
                 port:
-                  number: 8443
+                  number: 443
   tls:
     - hosts:
         - cloud.sargeant.co # Replace with your domain
