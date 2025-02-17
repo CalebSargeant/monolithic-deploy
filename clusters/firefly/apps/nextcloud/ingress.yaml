@@ -6,7 +6,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: traefik
     cert-manager.io/cluster-issuer: letsencrypt-dns
-    traefik.ingress.kubernetes.io/service.serversscheme: https
+    traefik.ingress.kubernetes.io/service.serversscheme: http
     traefik.ingress.kubernetes.io/entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls.insecureSkipVerify: "true"
   labels:
