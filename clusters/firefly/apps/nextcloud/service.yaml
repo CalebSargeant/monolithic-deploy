@@ -3,14 +3,11 @@ kind: Service
 metadata:
   name: nextcloud
   namespace: nextcloud
-  annotations:
-    traefik.ingress.kubernetes.io/service.serversscheme: https
-    traefik.ingress.kubernetes.io/service.serverstransport: insecure-transport@kubernetescrd
 spec:
   selector:
     app: nextcloud
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 443
+      port: 8080
+      targetPort: 8080
   type: ClusterIP
