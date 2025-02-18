@@ -1,0 +1,26 @@
+---
+- name: Change listen 80 to listen 8080
+  lineinfile:
+    path: /mnt/nvme/nextcloud/nginx/site-confs/default.conf
+    regexp: '^(\s*)listen 80 default_server;'
+    line: '\1listen 8080 default_server;'
+    backrefs: yes
+
+- name: Change listen [::]:80 to listen [::]:8080
+  lineinfile:
+    path: /mnt/nvme/nextcloud/nginx/site-confs/default.conf
+    regexp: '^(\s*)listen \[::\]:80 default_server;'
+    line: '\1listen [::]:8080 default_server;'
+    backrefs: yes
+
+- name: Copy autoconfig.php
+  copy:
+    src: templates/autoconfig.php
+    dest: /mnt/nvme/nextcloud/php/autoconfig.php
+    owner: 1000
+    group: 1000
+    mode: 0644
+
+- name: Kill the nextcloud pod
+  shell: kubectl delete pod -n nextcloud -l app=nextcloud
+  ignore_errors: yes
