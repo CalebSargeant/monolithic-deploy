@@ -5,3 +5,4 @@ resources:
   - helmrepository.yaml
   - configmap.yaml
   - namespace.yaml
+  - ingress.yaml

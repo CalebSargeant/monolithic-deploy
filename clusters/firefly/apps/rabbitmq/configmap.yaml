@@ -22,13 +22,13 @@ data:
       securePassword: false
       enableLoopbackUser: false
 
-    replicaCount: 1  # Single instance for PoC
+    replicaCount: 1 
 
     clustering:
-      enabled: false  # No clustering for PoC
+      enabled: false
 
     persistence:
-      enabled: false  # Disable persistence for simplicity
+      enabled: false
 
     resources:
       requests:
@@ -44,7 +44,7 @@ data:
         amqp: 5672
         manager: 15672
 
-    plugins: "rabbitmq_management"  # Enable management UI plugin
+    plugins: "rabbitmq_management"
 
     extraConfiguration: |-
       # Enable guest access from all hosts
