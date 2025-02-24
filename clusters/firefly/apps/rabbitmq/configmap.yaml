@@ -39,7 +39,7 @@ data:
         cpu: "500m"
 
     service:
-      type: NodePort  # Expose service for easy access
+      type: ClusterIP
       ports:
         amqp: 5672
         manager: 15672
