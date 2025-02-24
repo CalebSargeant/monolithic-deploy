@@ -15,4 +15,5 @@ spec:
         namespace: flux-system
   valuesFrom:
     - kind: ConfigMap
-      name: rabbitmq
+      name: rabbitmq-values
+      valuesKey: values.yaml
