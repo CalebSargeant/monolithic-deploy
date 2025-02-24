@@ -2,15 +2,16 @@ apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: rabbitmq
-  namespace: rabbitmq
+  namespace: default
 spec:
   interval: 5m
   chart:
     spec:
-      chart: .
+      chart: rabbitmq
+      version: "15.3.2"
       sourceRef:
-        kind: OCIRepository
-        name: rabbitmq-oci
+        kind: HelmRepository
+        name: bitnami-oci
         namespace: flux-system
   valuesFrom:
     - kind: ConfigMap
