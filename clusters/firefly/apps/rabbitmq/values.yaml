@@ -1,0 +1,44 @@
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+  defaultStorageClass: ""
+
+image:
+  registry: docker.io
+  repository: bitnami/rabbitmq
+  tag: latest
+  pullPolicy: IfNotPresent
+
+auth:
+  username: admin
+  password: admin
+  securePassword: false
+  enableLoopbackUser: false
+
+replicaCount: 1  # Single instance for PoC
+
+clustering:
+  enabled: false  # No clustering for PoC
+
+persistence:
+  enabled: false  # Disable persistence for simplicity
+
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "250m"
+  limits:
+    memory: "512Mi"
+    cpu: "500m"
+
+service:
+  type: NodePort  # Expose service for easy access
+  ports:
+    amqp: 5672
+    manager: 15672
+
+plugins: "rabbitmq_management"  # Enable management UI plugin
+
+extraConfiguration: |-
+  # Enable guest access from all hosts
+  loopback_users.guest = false

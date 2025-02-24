@@ -13,13 +13,13 @@
     line: '\1listen [::]:8080 default_server;'
     backrefs: yes
 
-- name: Copy autoconfig.php
-  copy:
-    src: templates/autoconfig.php
-    dest: /mnt/nvme/nextcloud/php/autoconfig.php
-    owner: 1000
-    group: 1000
-    mode: 0644
+- name: Ensure 'overwriteprotocol' => 'https' exists
+  ansible.builtin.lineinfile:
+    path: /mnt/nvme/nextcloud/www/nextcloud/config/config.php
+    insertafter: "'overwrite.cli.url' => 'http://cloud.sargeant.co',"
+    line: "  'overwriteprotocol' => 'https',"
+    state: present
+    backup: yes
 
 - name: Kill the nextcloud pod
   shell: kubectl delete pod -n nextcloud -l app=nextcloud
