@@ -18,9 +18,11 @@ spec:
         - name: openfortivpn
           image: ghcr.io/calebsargeant/openfortivpn:arm64
           securityContext:
+            privileged: true
             capabilities:
               add:
                 - NET_ADMIN
+                - SYS_ADMIN
           envFrom:
             - secretRef:
                 name: openfortivpn-secrets
