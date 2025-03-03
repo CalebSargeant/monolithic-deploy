@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openfortivpn
+  namespace: vpn
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openfortivpn
+  template:
+    metadata:
+      labels:
+        app: openfortivpn
+    spec:
+      hostNetwork: true
+      containers:
+        - name: openfortivpn
+          image: ghcr.io/calebsargeant/openfortivpn:arm64
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+          env:
+            - name: VPN_HOST
+              value: "your.vpn.server"
+            - name: VPN_USERNAME
+              value: "your_username"
+            - name: VPN_PASSWORD
+              value: "your_password"
