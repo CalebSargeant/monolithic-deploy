@@ -21,10 +21,6 @@ spec:
             capabilities:
               add:
                 - NET_ADMIN
-          env:
-            - name: VPN_HOST
-              value: "your.vpn.server"
-            - name: VPN_USERNAME
-              value: "your_username"
-            - name: VPN_PASSWORD
-              value: "your_password"
+          envFrom:
+            - secretRef:
+                name: openfortivpn-secrets
