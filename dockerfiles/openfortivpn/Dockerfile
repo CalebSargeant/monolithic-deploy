@@ -1,10 +1,10 @@
-# Base image: Alpine Linux (lightweight)
-FROM alpine:latest
+# Use a minimal Debian-based image
+FROM debian:bookworm-slim
 
-# Install openfortivpn and dependencies
-RUN apk add --no-cache openfortivpn bash
+# Install dependencies and openfortivpn
+RUN apt update && apt install -y openfortivpn bash && rm -rf /var/lib/apt/lists/*
 
-# Create an entrypoint script
+# Copy entrypoint script
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
