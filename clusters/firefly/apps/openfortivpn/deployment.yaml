@@ -14,6 +14,7 @@ spec:
         app: openfortivpn
     spec:
       hostNetwork: true
+      restartPolicy: Never # Don't spam Duo!
       containers:
         - name: openfortivpn
           image: ghcr.io/calebsargeant/openfortivpn:arm64

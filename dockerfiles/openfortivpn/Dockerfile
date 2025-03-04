@@ -2,7 +2,7 @@
 FROM debian:bookworm-slim
 
 # Install dependencies and openfortivpn
-RUN apt update && apt install -y openfortivpn bash && rm -rf /var/lib/apt/lists/*
+RUN apt update && apt install -y openfortivpn bash curl dnsutils && rm -rf /var/lib/apt/lists/*
 
 # Copy entrypoint script
 COPY entrypoint.sh /entrypoint.sh
