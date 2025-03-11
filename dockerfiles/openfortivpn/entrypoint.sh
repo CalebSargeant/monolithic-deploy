@@ -33,32 +33,42 @@ VPN_PID=$!
 # Wait for VPN to establish
 sleep 5
 
-# Run a single health check, exit cleanly if VPN is down
-if [[ -n "$CURL_ENDPOINT" ]]; then
-  echo "$(date) - Checking VPN connectivity via HTTP..."
-  if ! curl -s --max-time 5 "$CURL_ENDPOINT" > /dev/null; then
-    echo "$(date) - VPN failed! Marking pod as unhealthy."
-    kill "$VPN_PID"
-    rm -f /tmp/healthy  # Mark pod as unhealthy
-    exit 0  # Prevent restart
-  fi
-fi
+# Function to check VPN health
+check_vpn() {
+  echo "$(date) - Running VPN health check..."
 
-if [[ -n "$DNS_ENDPOINT" ]]; then
-  echo "$(date) - Checking VPN connectivity via DNS..."
-  if ! dig "@$DNS_ENDPOINT" www.google.com +time=5 > /dev/null; then
-    echo "$(date) - VPN failed! Marking pod as unhealthy."
-    kill "$VPN_PID"
-    rm -f /tmp/healthy  # Mark pod as unhealthy
-    exit 0  # Prevent restart
+  if [[ -n "$CURL_ENDPOINT" ]]; then
+    echo "$(date) - Checking VPN connectivity via HTTP to $CURL_ENDPOINT..."
+    if ! curl -s --max-time 5 "$CURL_ENDPOINT" > /dev/null; then
+      echo "$(date) - VPN failed (HTTP check)! Marking pod as unhealthy."
+      kill "$VPN_PID"
+      rm -f /tmp/healthy  # Mark pod as unhealthy
+      exit 0
+    fi
   fi
-fi
+
+  if [[ -n "$DNS_ENDPOINT" ]]; then
+    echo "$(date) - Checking VPN connectivity via DNS to $DNS_ENDPOINT..."
+    if ! dig "@$DNS_ENDPOINT" www.google.com +time=5 > /dev/null; then
+      echo "$(date) - VPN failed (DNS check)! Marking pod as unhealthy."
+      kill "$VPN_PID"
+      rm -f /tmp/healthy  # Mark pod as unhealthy
+      exit 0
+    fi
+  fi
+
+  echo "$(date) - VPN health check passed."
+}
 
 # Mark the pod as healthy
 touch /tmp/healthy
-
 echo "$(date) - VPN is up and running."
-wait "$VPN_PID"
+
+# Periodic health checks while VPN is running
+while kill -0 "$VPN_PID" > /dev/null 2>&1; do
+  check_vpn
+  sleep 60  # Run health checks every 60 seconds
+done
 
 # If the VPN process exits, mark the pod as unhealthy
 echo "$(date) - VPN process exited. Shutting down."
