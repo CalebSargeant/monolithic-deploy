@@ -37,9 +37,6 @@ spec:
               cp build/bin/whisper-cli /usr/local/bin/whisper
               chmod +x /usr/local/bin/whisper
 
-              # Run database migrations
-              n8n migrate database
-
               # Start n8n
               exec n8n
           securityContext:
