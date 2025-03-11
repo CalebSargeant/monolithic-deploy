@@ -43,6 +43,8 @@ spec:
               value: "admin"
             - name: WEBHOOK_URL
               value: "https://n8n.sargeant.co"
+            - name: NODE_FUNCTION_ALLOW_EXTERNAL
+              value: "true"
           volumeMounts:
             - name: n8n
               mountPath: /home/node/.n8n
