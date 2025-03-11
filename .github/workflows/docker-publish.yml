@@ -60,15 +60,15 @@ jobs:
 
       - name: Checkout repository
         if: env.BUILD_NEEDED == 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Set up QEMU (for ARM emulation)
         if: env.BUILD_NEEDED == 'true'
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v3.6.0
 
       - name: Set up Docker Buildx
         if: env.BUILD_NEEDED == 'true'
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v3.10.0
 
       - name: Log in to GHCR
         if: env.BUILD_NEEDED == 'true'
@@ -77,9 +77,10 @@ jobs:
         run: echo "$GHCR_TOKEN" | docker login ghcr.io -u "CalebSargeant" --password-stdin
 
       - name: Determine Image Tag
-        if: env.BUILD_NEEDED == 'true'
         id: vars
         run: |
+          TAG_REF="${{ github.ref }}"
+          TAG_PREFIX="${{ matrix.image.tag_prefix }}"
           if [[ "$TAG_REF" == refs/tags/$TAG_PREFIX* ]]; then
             VERSION="${TAG_REF#refs/tags/$TAG_PREFIX}"
           else
@@ -87,11 +88,14 @@ jobs:
           fi
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "IMAGE_TAG=ghcr.io/calebsargeant/${{ matrix.image.registry_name }}:$VERSION" >> $GITHUB_ENV
+          echo "IMAGE_TAG_LATEST=ghcr.io/calebsargeant/${{ matrix.image.registry_name }}:latest" >> $GITHUB_ENV
 
-      - name: Build and Push Image
-        if: env.BUILD_NEEDED == 'true'
+      - name: Build and Push Image with Caching
         run: |
           docker buildx create --use
           docker buildx build --platform linux/amd64,linux/arm64 \
+            --cache-from=type=registry,ref=ghcr.io/calebsargeant/${{ matrix.image.registry_name }}:buildcache \
+            --cache-to=type=registry,ref=ghcr.io/calebsargeant/${{ matrix.image.registry_name }}:buildcache,mode=max \
             -t $IMAGE_TAG \
+            -t $IMAGE_TAG_LATEST \
             --push ${{ matrix.image.path }}
