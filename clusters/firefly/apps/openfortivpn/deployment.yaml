@@ -4,7 +4,7 @@ metadata:
   name: openfortivpn
   namespace: vpn
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: openfortivpn
