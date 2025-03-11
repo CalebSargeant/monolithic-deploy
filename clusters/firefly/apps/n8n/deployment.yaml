@@ -15,32 +15,7 @@ spec:
     spec:
       containers:
         - name: n8n
-          image: n8nio/n8n:latest
-          command: ["/bin/sh", "-c"]
-          args:
-            - |
-              # Install dependencies
-              apk add --no-cache chromium ffmpeg git build-base cmake wget curl openblas-dev
-
-              # Install Puppeteer
-              npm_config_user=root npm install puppeteer
-
-              # Clone whispercpp
-              git clone https://github.com/ggerganov/whisper.cpp.git /opt/whispercpp
-              cd /opt/whispercpp
-
-              # Build whispercpp
-              cmake -B build -DCMAKE_BUILD_TYPE=Release
-              cmake --build build --parallel $(nproc)
-
-              # Move the correct binary
-              cp build/bin/whisper-cli /usr/local/bin/whisper
-              chmod +x /usr/local/bin/whisper
-
-              # Start n8n
-              exec n8n
-          securityContext:
-            runAsUser: 0  # Temporarily run as root for installation
+          image: ghcr.io/calebsargeant/n8n:latest@sha256:552101b53218deba542a1d2685848f0e0d452bb414ec541791f56a189fdfa499
           env:
             - name: N8N_BASIC_AUTH_ACTIVE
               value: "true"
