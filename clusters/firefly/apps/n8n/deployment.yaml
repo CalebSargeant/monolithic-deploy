@@ -19,37 +19,29 @@ spec:
           command: ["/bin/sh", "-c"]
           args:
             - |
-              #apk add --no-cache pandoc py3-pip so:libgobject-2.0.so.0 so:libpango-1.0.so.0 so:libharfbuzz.so.0 so:libharfbuzz-subset.so.0 so:libfontconfig.so.1 so:libpangoft2-1.0.so.0
-              #apk add gcc musl-dev python3-dev zlib-dev jpeg-dev openjpeg-dev libwebp-dev g++ libffi-dev
-              #cd /home/node
-              #python3 -m venv venv
-              #source venv/bin/activate
-              #pip install weasyprint
-              
-              #python3 -m venv venv
-              #source venv/bin/activate
-              
+              # Install dependencies
               apk add --no-cache chromium ffmpeg git build-base cmake wget curl openblas-dev
-              
+
+              # Install Puppeteer
+              npm_config_user=root npm install puppeteer
+
               # Clone whispercpp
               git clone https://github.com/ggerganov/whisper.cpp.git /opt/whispercpp
               cd /opt/whispercpp
-              
+
               # Build whispercpp
               cmake -B build -DCMAKE_BUILD_TYPE=Release
               cmake --build build --parallel $(nproc)
-              
-              # Check the actual location of the binary
-              find build/bin -type f
-              
-              # Move the correct binary to /usr/local/bin
+
+              # Move the correct binary
               cp build/bin/whisper-cli /usr/local/bin/whisper
-              
-              # Ensure it's executable
               chmod +x /usr/local/bin/whisper
-              
+
+              # Run database migrations
+              n8n migrate database
+
               # Start n8n
-              exec su node -c "n8n"
+              exec n8n
           securityContext:
             runAsUser: 0  # Temporarily run as root for installation
           env:
@@ -62,7 +54,21 @@ spec:
             - name: N8N_HOST
               value: "n8n.sargeant.co"
             - name: DB_TYPE
-              value: "sqlite"
+              value: "postgres"
+            - name: DB_POSTGRES_HOST
+              value: "postgres.database.svc.cluster.local"
+            - name: DB_POSTGRES_PORT
+              value: "5432"
+            - name: DB_POSTGRES_USER
+              valueFrom:
+                  secretKeyRef:
+                    name: n8n
+                    key: postgres-username
+            - name: DB_POSTGRES_PASSWORD
+              valueFrom:
+                  secretKeyRef:
+                    name: n8n
+                    key: postgres-password
             - name: N8N_LOG_LEVEL
               value: "info"
             - name: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS

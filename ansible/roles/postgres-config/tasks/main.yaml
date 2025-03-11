@@ -4,40 +4,43 @@
   register: postgres_pod_name
   changed_when: false
 
-- name: Debug pod name
-  debug:
-    msg: "Using PostgreSQL pod: {{ postgres_pod_name.stdout }}"
-
-- name: Create Nextcloud database
+- name: Check if databases exist
   command: > 
     kubectl exec -n database {{ postgres_pod_name.stdout }} -- 
-    psql -U admin -d postgres -c "SELECT 1 FROM pg_database WHERE datname = 'nextcloud';"
+    psql -U admin -d postgres -tAc "SELECT 1 FROM pg_database WHERE datname = '{{ item }}';"
   register: db_check
   changed_when: false
   failed_when: false
+  with_items:
+    - nextcloud
+    - n8n
 
-- name: Create Nextcloud database (if not exists)
+- name: Create databases if they don't exist
   command: > 
     kubectl exec -n database {{ postgres_pod_name.stdout }} -- 
-    psql -U admin -d postgres -c "CREATE DATABASE nextcloud;"
-  when: "'1 row' not in db_check.stdout"
+    psql -U admin -d postgres -c "CREATE DATABASE {{ item }};"
+  when: "'1' not in db_check.results[item_index].stdout"
   register: db_creation
   changed_when: "'CREATE DATABASE' in db_creation.stdout"
+  loop:
+    - nextcloud
+    - n8n
+  loop_control:
+    index_var: item_index  # Required to match db_check.results indices
 
 - name: Create admin user (if not exists)
   command: > 
     kubectl exec -n database {{ postgres_pod_name.stdout }} -- 
-    psql -U admin -d postgres -c "DO $$ BEGIN IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'admin') THEN CREATE USER admin WITH ENCRYPTED PASSWORD 'admin'; END IF; END $$;"
+    psql -U admin -d postgres -c "DO $$ BEGIN IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = '{{ postgres_username }}') THEN CREATE USER {{ postgres_username }} WITH ENCRYPTED PASSWORD '{{ postgres_password }}'; END IF; END $$;"
   register: user_creation
   changed_when: "'CREATE ROLE' in user_creation.stdout"
 
 - name: Grant privileges to admin user
   command: > 
     kubectl exec -n database {{ postgres_pod_name.stdout }} -- 
-    psql -U admin -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE nextcloud TO admin;"
+    psql -U admin -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE {{ item }} TO admin;"
   register: grant_privs
   changed_when: "'GRANT' in grant_privs.stdout"
-
-- name: Show success message
-  debug:
-    msg: "Nextcloud database and admin user successfully created!"
+  with_items:
+    - nextcloud
+    - n8n
