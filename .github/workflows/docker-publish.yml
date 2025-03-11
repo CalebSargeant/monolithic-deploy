@@ -80,7 +80,7 @@ jobs:
         run: echo "$GHCR_TOKEN" | docker login ghcr.io -u "CalebSargeant" --password-stdin
 
       - name: Determine Image Tag
-        if: env.BUILD_NEEDED == 'false'
+        if: env.BUILD_NEEDED == 'true'
         id: vars
         run: |
           TAG_REF="${{ github.ref }}"
@@ -95,7 +95,7 @@ jobs:
           echo "IMAGE_TAG_LATEST=ghcr.io/calebsargeant/${{ matrix.image.registry_name }}:latest" >> $GITHUB_ENV
 
       - name: Build and Push Image with Caching
-        if: env.BUILD_NEEDED == 'false'
+        if: env.BUILD_NEEDED == 'true'
         run: |
           docker buildx create --use
           docker buildx build --platform linux/amd64,linux/arm64 \
