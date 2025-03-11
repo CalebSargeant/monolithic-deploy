@@ -1,3 +1,4 @@
+# Use official n8n base image
 FROM n8nio/n8n:latest AS base
 
 # Switch to root user to install dependencies
@@ -33,12 +34,17 @@ RUN chmod +x /usr/local/bin/whisper
 # Set working directory to n8n default
 WORKDIR /home/node
 
+# Set PATH correctly
+ENV PATH="/usr/local/lib/node_modules/n8n/bin:$PATH"
+
 # Switch back to default non-root user
 USER node
 
 # Expose default n8n port
 EXPOSE 5678
 
-# Use n8n's default entrypoint
-ENTRYPOINT ["/docker-entrypoint.sh"]
+# Use n8n's official entrypoint
+ENTRYPOINT ["tini", "--", "/docker-entrypoint.sh"]
+
+# Default command to start n8n
 CMD ["n8n"]
