@@ -26,3 +26,8 @@ spec:
           envFrom:
             - secretRef:
                 name: openfortivpn-secrets
+          readinessProbe: # <-- Add readiness probe
+            exec:
+              command: [ "test", "-f", "/tmp/healthy" ]  # Checks if the VPN is up
+            periodSeconds: 10  # Check every 10 seconds
+            failureThreshold: 1  # Mark as "Not Ready" immediately if VPN fails
