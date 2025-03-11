@@ -11,17 +11,29 @@ for var in "${REQUIRED_VARS[@]}"; do
   fi
 done
 
-# Function to check VPN status
+# Function to check VPN status with logging
 check_vpn() {
   if [[ -n "$CURL_ENDPOINT" ]]; then
-    if ! curl -s "$CURL_ENDPOINT" > /dev/null; then
+    echo "$(date) - Checking VPN via HTTP request to $CURL_ENDPOINT..."
+    START_TIME=$(date +%s%N)
+    if curl -s --max-time 5 "$CURL_ENDPOINT" > /dev/null; then
+      END_TIME=$(date +%s%N)
+      RESPONSE_TIME=$(( (END_TIME - START_TIME) / 1000000 ))  # Convert nanoseconds to milliseconds
+      echo "$(date) - Success: Reached $CURL_ENDPOINT in ${RESPONSE_TIME}ms"
+    else
       echo "$(date) - Warning: VPN may be down! Failed to reach $CURL_ENDPOINT"
       return 1
     fi
   fi
 
   if [[ -n "$DNS_ENDPOINT" ]]; then
-    if ! dig "@$DNS_ENDPOINT" www.google.com > /dev/null; then
+    echo "$(date) - Checking VPN via DNS query to $DNS_ENDPOINT..."
+    START_TIME=$(date +%s%N)
+    if dig "@$DNS_ENDPOINT" www.google.com +time=5 > /dev/null; then
+      END_TIME=$(date +%s%N)
+      RESPONSE_TIME=$(( (END_TIME - START_TIME) / 1000000 ))  # Convert nanoseconds to milliseconds
+      echo "$(date) - Success: DNS query to $DNS_ENDPOINT completed in ${RESPONSE_TIME}ms"
+    else
       echo "$(date) - Warning: VPN may be down! Failed to query $DNS_ENDPOINT"
       return 1
     fi
