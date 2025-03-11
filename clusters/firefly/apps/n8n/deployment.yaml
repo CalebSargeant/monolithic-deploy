@@ -29,14 +29,14 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: n8n
-                  key: n8n-username
+                  key: postgres-username
             - name: DB_POSTGRESDB_SCHEMA
               value: "public"
             - name: DB_POSTGRESDB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: n8n
-                  key: n8n-password
+                  key: postgres-password
             - name: N8N_BASIC_AUTH_ACTIVE
               value: "true"
             - name: N8N_BASIC_AUTH_USER
