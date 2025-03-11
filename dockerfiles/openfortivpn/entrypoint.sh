@@ -39,7 +39,7 @@ check_vpn() {
 
   if [[ -n "$CURL_ENDPOINT" ]]; then
     echo "$(date) - Checking VPN connectivity via HTTP to $CURL_ENDPOINT..."
-    if ! curl -s --max-time 5 "$CURL_ENDPOINT" > /dev/null; then
+    if ! curl -s --max-time 10 "$CURL_ENDPOINT" > /dev/null; then
       echo "$(date) - VPN failed (HTTP check)! Marking pod as unhealthy."
       kill "$VPN_PID"
       rm -f /tmp/healthy  # Mark pod as unhealthy
@@ -57,6 +57,16 @@ check_vpn() {
     fi
   fi
 
+  if [[ -n "$DNS_ENDPOINT" ]]; then
+    echo "$(date) - Checking VPN connectivity via PING to $DNS_ENDPOINT..."
+    if ! ping -c 5 "$DNS_ENDPOINT" > /dev/null; then
+      echo "$(date) - VPN failed (Ping check)! Marking pod as unhealthy."
+      kill "$VPN_PID"
+      rm -f /tmp/healthy  # Mark pod as unhealthy
+      exit 0
+    fi
+  fi
+
   echo "$(date) - VPN health check passed."
 }
 
@@ -67,7 +77,7 @@ echo "$(date) - VPN is up and running."
 # Periodic health checks while VPN is running
 while kill -0 "$VPN_PID" > /dev/null 2>&1; do
   check_vpn
-  sleep 60  # Run health checks every 60 seconds
+  sleep 10  # Run health checks every 10 seconds
 done
 
 # If the VPN process exits, mark the pod as unhealthy
