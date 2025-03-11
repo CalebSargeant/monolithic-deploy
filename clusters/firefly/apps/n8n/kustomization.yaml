@@ -7,3 +7,4 @@ resources:
   - pvc.yaml
   - pv.yaml
   - namespace.yaml
+  - secret.enc.yaml
