@@ -1,5 +1,8 @@
 FROM n8nio/n8n:latest
 
+# Switch to root user to install packages
+USER root
+
 # Install dependencies
 RUN apk add --no-cache \
     chromium \
@@ -26,6 +29,9 @@ RUN git clone --depth=1 https://github.com/ggerganov/whisper.cpp.git whispercpp 
 
 # Ensure the working directory is back to n8n default
 WORKDIR /data
+
+# Switch back to default non-root user
+USER node
 
 # Start n8n normally (without migration)
 CMD ["n8n"]
