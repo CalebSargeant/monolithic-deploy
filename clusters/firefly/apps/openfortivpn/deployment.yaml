@@ -16,7 +16,7 @@ spec:
       hostNetwork: true
       containers:
         - name: openfortivpn
-          image: ghcr.io/calebsargeant/openfortivpn:latest@sha256:f2393f5b1183263f7a368567569cd70b4705977b680e91777d92a92bda844530
+          image: ghcr.io/calebsargeant/openfortivpn:latest@sha256:029c8dd6e349a9d2224da67f53b5f375974477ac38bbb0b665a31f9749b91b22
           securityContext:
             privileged: true
             capabilities:
