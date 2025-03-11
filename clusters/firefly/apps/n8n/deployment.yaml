@@ -17,36 +17,32 @@ spec:
         - name: n8n
           image: ghcr.io/calebsargeant/n8n:latest@sha256:552101b53218deba542a1d2685848f0e0d452bb414ec541791f56a189fdfa499
           env:
+            - name: DB_TYPE
+              value: "postgresdb"
+            - name: DB_POSTGRESDB_DATABASE
+              value: "n8n"
+            - name: DB_POSTGRESDB_HOST
+              value: "postgres.database.svc.cluster.local"
+            - name: DB_POSTGRESDB_PORT
+              value: "5432"
+            - name: DB_POSTGRESDB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: n8n
+                  key: n8n-username
+            - name: DB_POSTGRESDB_SCHEMA
+              value: "public"
+            - name: DB_POSTGRESDB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: n8n
+                  key: n8n-password
             - name: N8N_BASIC_AUTH_ACTIVE
               value: "true"
             - name: N8N_BASIC_AUTH_USER
               value: "admin"
             - name: WEBHOOK_URL
               value: "https://n8n.sargeant.co"
-            - name: N8N_HOST
-              value: "n8n.sargeant.co"
-            - name: DB_TYPE
-              value: "postgres"
-            - name: DB_POSTGRES_HOST
-              value: "postgres.database.svc.cluster.local"
-            - name: DB_POSTGRES_PORT
-              value: "5432"
-            - name: DB_POSTGRES_USER
-              valueFrom:
-                  secretKeyRef:
-                    name: n8n
-                    key: postgres-username
-            - name: DB_POSTGRES_PASSWORD
-              valueFrom:
-                  secretKeyRef:
-                    name: n8n
-                    key: postgres-password
-            - name: N8N_LOG_LEVEL
-              value: "info"
-            - name: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS
-              value: "true"
-            - name: NODE_FUNCTION_ALLOW_EXTERNAL
-              value: "puppeteer"
           volumeMounts:
             - name: n8n
               mountPath: /home/node/.n8n
