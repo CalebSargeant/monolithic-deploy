@@ -31,7 +31,7 @@ openfortivpn -c /etc/openfortivpn.conf &
 VPN_PID=$!
 
 # Wait for VPN to establish
-sleep 5
+sleep 10
 
 # Function to check VPN health
 check_vpn() {
@@ -59,7 +59,7 @@ check_vpn() {
 
   if [[ -n "$DNS_ENDPOINT" ]]; then
     echo "$(date) - Checking VPN connectivity via PING to $DNS_ENDPOINT..."
-    if ! ping -c 5 "$DNS_ENDPOINT" > /dev/null; then
+    if ! ping -c 8 "$DNS_ENDPOINT" > /dev/null; then
       echo "$(date) - VPN failed (Ping check)! Marking pod as unhealthy."
       kill "$VPN_PID"
       rm -f /tmp/healthy  # Mark pod as unhealthy
@@ -77,7 +77,7 @@ echo "$(date) - VPN is up and running."
 # Periodic health checks while VPN is running
 while kill -0 "$VPN_PID" > /dev/null 2>&1; do
   check_vpn
-  sleep 10  # Run health checks every 10 seconds
+  sleep 30  # Run health checks every 30 seconds
 done
 
 # If the VPN process exits, mark the pod as unhealthy
