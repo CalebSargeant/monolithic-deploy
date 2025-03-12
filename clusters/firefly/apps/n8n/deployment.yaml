@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: n8n
-          image: ghcr.io/calebsargeant/n8n:latest@sha256:ba187b47fef1fae259ac219a45def19b7236b460d3109bd287b31b3aaf836645
+          image: ghcr.io/calebsargeant/n8n:latest@sha256:49e84bc02856fae6c632d15e24972eaa56d007292ebb7c96d3606a4874e4e499
           env:
             - name: DB_TYPE
               value: "postgresdb"
