@@ -50,6 +50,10 @@ spec:
                 secretKeyRef:
                   name: n8n
                   key: encryption-key
+            - name: N8N_RUNNERS_ENABLED
+              value: "true"
+            - name: N8N_CUSTOM_EXTENSIONS
+              value: "/usr/local/lib/node_modules/puppeteer"
           volumeMounts:
             - name: n8n
               mountPath: /home/node/.n8n
