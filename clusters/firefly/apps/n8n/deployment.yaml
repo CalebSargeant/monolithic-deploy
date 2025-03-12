@@ -43,8 +43,6 @@ spec:
               value: "admin"
             - name: WEBHOOK_URL
               value: "https://n8n.sargeant.co"
-            - name: NODE_FUNCTION_ALLOW_EXTERNAL
-              value: "true"
             - name: N8N_ENCRYPTION_KEY
               valueFrom:
                 secretKeyRef:
