@@ -6,6 +6,7 @@ USER root
 
 RUN apk add --no-cache \
     chromium \
+    chromium-chromedriver \
     ffmpeg \
     git \
     cmake \
@@ -15,7 +16,18 @@ RUN apk add --no-cache \
     wget \
     curl \
     openblas-dev \
-    && npm_config_user=root npm install puppeteer
+    udev \
+    ttf-freefont \
+    font-noto \
+    nss \
+    freetype \
+    harfbuzz \
+    libstdc++ \
+    libx11 \
+    libxrender \
+    libxext \
+    libxcb \
+    && npm_config_user=root npm install -g puppeteer
 
 # Multi-stage build for whispercpp
 FROM base AS whispercpp-build
