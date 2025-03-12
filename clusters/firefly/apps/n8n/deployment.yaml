@@ -45,7 +45,7 @@ spec:
               value: "https://n8n.sargeant.co"
             - name: NODE_FUNCTION_ALLOW_EXTERNAL
               value: "true"
-            - name: N8N_ENCRIPTION_KEY
+            - name: N8N_ENCRYPTION_KEY
               valueFrom:
                 secretKeyRef:
                   name: n8n
