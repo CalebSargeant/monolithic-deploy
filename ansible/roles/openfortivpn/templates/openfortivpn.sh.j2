@@ -1,4 +1,31 @@
 #!/bin/bash
 
-openfortivpn -c /etc/openfortivpn.conf
+CURL_ENDPOINT="{{ fortivpn_curl }}"
 
+# Function to start VPN
+fortivpn () {
+  openfortivpn -c /etc/openfortivpn/config
+}
+
+# Function to send keepalive requests while VPN is running
+keepalive () {
+  while pgrep -x "openfortivpn" > /dev/null; do
+    curl -s --max-time 10 "$CURL_ENDPOINT" || echo "Keepalive failed"
+    sleep 30
+  done
+}
+
+# Start VPN in the background
+fortivpn &
+
+# Get VPN process ID
+VPN_PID=$!
+
+# Start keepalive in background
+keepalive &
+
+# Wait for VPN process to exit
+wait $VPN_PID
+
+# Once VPN dies, kill keepalive function
+pkill -P $$ keepalive
