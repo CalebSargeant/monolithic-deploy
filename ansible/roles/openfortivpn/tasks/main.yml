@@ -1,0 +1,15 @@
+---
+- name: Install openfortivpn
+  apt:
+    name: openfortivpn
+    state: present
+
+- name: Copy templated
+  template:
+    src: templates/{{ item.name }}.j2
+    dest: {{ item.dest }}
+    mode: {{ item.mode }}
+  with_items:
+    - { name: "openfortivpn.conf", dest: "/etc/openfortivpn.conf", mode: "0644" }
+    - { name: "openfortivpn.sh", dest: "/usr/local/bin/openfortivpn.sh", mode: "0755" }
+
