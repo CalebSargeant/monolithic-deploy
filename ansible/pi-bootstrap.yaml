@@ -4,10 +4,13 @@
   become_method: sudo
   vars_files:
   - vars/pi.yaml
+  - vars/k3s.yaml
   roles:
 #    - apt-update-upgrade
 #    - root-terminal-colours
 #    - pironman-install
 #    - k3s-pi-install
-    - k3s-sops-gpg-secret
+#    - k3s-sops-gpg-secret
 #    - k3s-fluxcd-bootstrap
+    - buxfer-sync
+    - openfortivpn
