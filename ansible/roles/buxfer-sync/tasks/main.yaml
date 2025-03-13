@@ -1,0 +1,18 @@
+---
+- name: Copy Buxfer Sync Script
+  template:
+    src: buxfer_sync.py.j2
+    dest: /usr/local/bin/buxfer_sync.py
+    mode: 0755
+
+- name: Install python3-selenium
+  apt:
+    name: python3-selenium
+    state: present
+
+- name: Cronjob to execute script every 6 hours
+  cron:
+    name: "Buxfer Sync"
+    minute: "0"
+    hour: "*/6"
+    job: "/usr/bin/sudo /usr/bin/python3 /usr/local/bin/buxfer_sync.py"

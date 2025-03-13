@@ -1,0 +1,82 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
+
+# Set up Chrome options for headless mode
+chrome_options = Options()
+chrome_options.add_argument("--headless")  # Runs Chrome in headless mode
+chrome_options.add_argument("--no-sandbox")  # Bypass OS security model
+chrome_options.add_argument("--disable-dev-shm-usage")  # Overcome limited resources in containers
+chrome_options.add_argument("--disable-gpu")  # Needed for headless mode on some systems
+chrome_options.add_argument("--window-size=1920x1080")  # Ensures elements load correctly
+
+# Set up the driver
+driver = webdriver.Chrome(options=chrome_options)
+
+# Open Buxfer login page
+driver.get("https://www.buxfer.com/login")
+
+# Wait for the cookie banner and remove it
+try:
+    WebDriverWait(driver, 5).until(
+        EC.presence_of_element_located((By.CLASS_NAME, "cc-window"))
+    )
+    driver.execute_script("document.querySelector('.cc-window').remove();")
+    print("Cookie consent banner removed.")
+except:
+    print("No cookie consent banner found.")
+
+# Locate login elements
+email_input = WebDriverWait(driver, 10).until(
+    EC.presence_of_element_located((By.NAME, "email"))
+)
+password_input = driver.find_element(By.NAME, "password")
+login_button = driver.find_element(By.CLASS_NAME, "submitButton")
+
+# Enter credentials
+email_input.send_keys({{ buxfer_username }})
+password_input.send_keys({{ buxfer_password }})
+
+# Use JavaScript to click the login button if intercepted
+try:
+    login_button.click()
+except:
+    driver.execute_script("arguments[0].click();", login_button)
+
+# Wait for the dashboard to load
+dashboard_element = WebDriverWait(driver, 10).until(
+    EC.presence_of_element_located((By.CLASS_NAME, "UINavigationItem"))  # Adjust this if necessary
+)
+print("Login successful.")
+
+# Wait for the sync button to appear
+try:
+    sync_button = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.CLASS_NAME, "syncAction"))
+    )
+    sync_button.click()  # Normal click
+    print("Sync button clicked.")
+except:
+    print("Sync button click intercepted. Trying JavaScript click...")
+    driver.execute_script("arguments[0].click();", sync_button)  # FIXED: Correct variable name
+
+# Optional: Wait for sync to complete (adjust class name if needed)
+try:
+    WebDriverWait(driver, 15).until(
+        EC.presence_of_element_located((By.CLASS_NAME, "syncCompleteMessage"))
+    )
+    print("Sync complete!")
+except:
+    print("Sync completion not detected, but click was performed.")
+
+# Debugging: Print all sync buttons found
+sync_buttons = driver.find_elements(By.CLASS_NAME, "syncAction")
+print(f"Found {len(sync_buttons)} sync buttons.")
+
+for btn in sync_buttons:
+    print(btn.get_attribute("outerHTML"))
+
+# Close browser after sync
+driver.quit()
