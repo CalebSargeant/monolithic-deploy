@@ -11,6 +11,7 @@
     state: present
 
 - name: Cronjob to execute script every 6 hours
+  become: false
   cron:
     name: "Buxfer Sync"
     minute: "0"

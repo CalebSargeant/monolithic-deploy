@@ -36,8 +36,8 @@ password_input = driver.find_element(By.NAME, "password")
 login_button = driver.find_element(By.CLASS_NAME, "submitButton")
 
 # Enter credentials
-email_input.send_keys({{ buxfer_username }})
-password_input.send_keys({{ buxfer_password }})
+email_input.send_keys("{{ buxfer_username }}")
+password_input.send_keys("{{ buxfer_password }}")
 
 # Use JavaScript to click the login button if intercepted
 try:
