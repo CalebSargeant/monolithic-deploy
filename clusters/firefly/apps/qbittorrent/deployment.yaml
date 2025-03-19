@@ -20,7 +20,7 @@ spec:
           image: linuxserver/qbittorrent:5.0.2
           ports:
             - containerPort: 8080 # Web UI
-            - containerPort: 6881 # BitTorrent (TCP/UDP)
+            - containerPort: 55555 # BitTorrent (TCP/UDP)
           env:
             - name: PUID
               value: "1000" # Replace with your user ID
