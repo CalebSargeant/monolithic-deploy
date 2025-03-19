@@ -13,10 +13,10 @@ spec:
       targetPort: 8080 # Web UI
     - name: bittorrent-tcp
       protocol: TCP
-      port: 6881
-      targetPort: 6881 # BitTorrent TCP
+      port: 55555
+      targetPort: 55555 # BitTorrent TCP
     - name: bittorrent-udp
       protocol: UDP
-      port: 6881
-      targetPort: 6881 # BitTorrent UDP
+      port: 55555
+      targetPort: 55555 # BitTorrent UDP
   type: ClusterIP
