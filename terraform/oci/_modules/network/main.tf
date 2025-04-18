@@ -2,6 +2,7 @@ resource "oci_core_virtual_network" "this" {
   compartment_id = var.compartment_ocid
   display_name   = "vcn-${var.environment}"
   cidr_block     = var.network_cidr
+  dns_label      = "vcn${var.environment}"
 }
 
 resource "oci_core_internet_gateway" "this" {
