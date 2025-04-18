@@ -7,16 +7,13 @@ locals {
   oci_version       = "5.33.0"
 
   region_vars      = read_terragrunt_config("${find_in_parent_folders("region.hcl")}")
-  environment_vars = read_terragrunt_config("${find_in_parent_folders("env.hcl")}")
+  environment_vars = read_terragrunt_config("${find_in_parent_folders("environment.hcl")}")
   provider_vars    = read_terragrunt_config("${find_in_parent_folders("provider.hcl")}")
 
-  company = "magmamoose"
+  company = "sargeant"
   provider = local.provider_vars.inputs.provider
-  region  = local.region_vars.inputs.region
-  environment = local.environment_vars.inputs.environment
-
-  # TODO: put the hcloud token inside sops
-  hcloud_token      = "${get_env("HCLOUD_TOKEN", "")}"
+  region  = local.region_vars.locals.region
+  environment = local.environment_vars.locals.environment
 }
 
 inputs = merge(
@@ -25,7 +22,7 @@ inputs = merge(
   local.provider_vars.locals,
   {
     company = local.company
-    domain = "magmamoose.com"
+    domain = "sargeant.co"
     sops_path = "${get_repo_root()}/sops"
     ansible_path = "${get_repo_root()}/ansible"
   }
@@ -36,7 +33,7 @@ remote_state {
   config = {
     bucket   = "${local.company}-${local.environment}-terraform-state"
     prefix   = "${path_relative_to_include()}"
-    project  = "${local.company}-terraform"
+    project  = "magmamoose-terraform"
     location = "europe-west4"
   }
 }
@@ -60,10 +57,6 @@ provider "google" {
   project         = "magmamoose-terraform"
   region          = "europe-west4"
   impersonate_service_account = "deployer@magmamoose-terraform.iam.gserviceaccount.com"
-}
-
-provider "hcloud" {
-  token = "${get_env("HCLOUD_TOKEN", "")}"
 }
 
 provider "oci" {

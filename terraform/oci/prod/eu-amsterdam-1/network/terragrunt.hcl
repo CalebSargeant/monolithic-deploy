@@ -1,5 +1,5 @@
 include {
-  path = find_in_parent_folders()
+  path = find_in_parent_folders("root.hcl")
 }
 
 terraform {
@@ -19,7 +19,7 @@ inputs = {
   region             = local.region_vars.locals.region
   compartment_ocid   = get_env("OCI_COMPARTMENT_OCID", "")
   environment        = local.environment_vars.locals.environment
-  network_cidr       = "172.16.1.0/16"
-  subnet_cidr        = "172.16.1.0/24"
+  network_cidr       = "172.17.0.0/16"
+  subnet_cidr        = "172.17.0.0/24"
   ssh_public_key_path = "${get_repo_root()}/ansible/keys/id_rsa.pub"
 }
