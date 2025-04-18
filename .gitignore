@@ -47,3 +47,4 @@ age.agekey
 .service-account.json
 
 *.gitignore.*
+.idea/
