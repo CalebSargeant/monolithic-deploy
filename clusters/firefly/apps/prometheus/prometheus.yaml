@@ -29,6 +29,7 @@ scrape_configs:
           - gscid-vet.lpr.camera
           - hh00ac8tkjn.sn.mynetname.net
           - lprcptthomas.dvrdns.org
+          - api.telegram.org
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
@@ -59,6 +60,7 @@ scrape_configs:
           - http://hh00ac8tkjn.sn.mynetname.net:8080
           - http://lprcptthomas.dvrdns.org:82
 #          - http://10.200.5.216:80
+          - https://api.telegram.org
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
