@@ -4,6 +4,7 @@ locals {
   aws_version       = "5.82.2"
   routeros_version  = "1.74.0"
   sops_version      = "1.1.1"
+  oci_version       = "5.33.0"
 
   region_vars      = read_terragrunt_config("${find_in_parent_folders("region.hcl")}")
   environment_vars = read_terragrunt_config("${find_in_parent_folders("env.hcl")}")
@@ -63,6 +64,14 @@ provider "google" {
 
 provider "hcloud" {
   token = "${get_env("HCLOUD_TOKEN", "")}"
+}
+
+provider "oci" {
+  tenancy_ocid     = "${get_env("OCI_TENANCY_OCID", "")}"
+  user_ocid        = "${get_env("OCI_USER_OCID", "")}"
+  private_key_path = "${get_env("OCI_PRIVATE_KEY_PATH", "")}"
+  fingerprint      = "${get_env("OCI_FINGERPRINT", "")}"
+  region           = "${get_env("OCI_REGION", "ap-sydney-1")}"
 }
 EOF
 }

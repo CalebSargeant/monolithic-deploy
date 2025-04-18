@@ -45,6 +45,10 @@ ansible/vars
 .sops.yaml
 age.agekey
 .service-account.json
+oci_api_key.pem
+oci_api_key_public.pem
 
 *.gitignore.*
 .idea/
+.terragrunt-cache/
+provider.tf
