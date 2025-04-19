@@ -15,6 +15,10 @@ dependency "network" {
   config_path = "../network"
 }
 
+dependency "edge" {
+  config_path = "../edge"
+}
+
 inputs = {
   tenancy_ocid            = get_env("OCI_TENANCY_OCID", "")
   compartment_ocid        = get_env("OCI_COMPARTMENT_OCID", "")
@@ -28,4 +32,7 @@ inputs = {
   ssh_public_key_path     = "${get_repo_root()}/ansible/keys/id_rsa.pub"
   # Oracle Linux 8 for ARM
   image_ocid              = "ocid1.image.oc1.eu-amsterdam-1.aaaaaaaahc3kbflujx4g536l4yuzzy7udc6ltwlbt7iqbkt33i6zx62yy7va"
+  # Route all traffic through the edge CHR
+  edge_private_ip         = dependency.edge.outputs.private_ip
+  edge_instance_id        = dependency.edge.outputs.instance_id
 }

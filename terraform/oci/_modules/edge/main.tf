@@ -12,9 +12,10 @@ resource "oci_core_instance" "this" {
   shape               = var.shape
 
   create_vnic_details {
-    subnet_id        = var.subnet_id
-    assign_public_ip = true
-    nsg_ids          = [var.network_security_group_id]
+    subnet_id              = var.subnet_id
+    assign_public_ip       = true
+    nsg_ids                = [var.network_security_group_id]
+    skip_source_dest_check = true
   }
 
   source_details {
