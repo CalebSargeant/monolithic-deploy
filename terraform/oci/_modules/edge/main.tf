@@ -1,4 +1,5 @@
 # This instance will be a Mikrotik CHR using OCI free tier x86 machine
+# The instance will directly flash the CHR image to disk during provisioning
 
 data "oci_identity_availability_domains" "ads" {
   compartment_id = var.tenancy_ocid
@@ -25,37 +26,24 @@ resource "oci_core_instance" "this" {
     ssh_authorized_keys = file(var.ssh_public_key_path)
     user_data = base64encode(<<-EOF
       #!/bin/bash
-      # Download Mikrotik CHR
-      curl -o /tmp/chr-6.49.6.img https://download.mikrotik.com/routeros/6.49.6/chr-6.49.6.img
+      # flash.sh - Flash MikroTik CHR image and reboot
+      # This script will download a pre-baked CHR image,
+      # write it to /dev/sda, and then reboot the machine.
 
-      # Install required packages
-      apt-get update
-      apt-get install -y qemu-kvm libvirt-daemon-system
+      set +e
 
-      # Create a directory for CHR
-      mkdir -p /opt/chr
+      # Log to a file for debugging
+      exec > >(tee /var/log/chr-install.log) 2>&1
 
-      # Move the CHR image to the directory
-      mv /tmp/chr-6.49.6.img /opt/chr/
+      echo "Starting CHR installation at $(date)"
+      echo "Downloading and flashing CHR image..."
+      curl -L "https://github.com/CalebSargeant/mikrotik-chr/releases/download/v7.18.2/chr.img.gz" | gunzip | dd of=/dev/sda bs=1M || :
 
-      # Create a systemd service for CHR
-      cat > /etc/systemd/system/chr.service << 'EOL'
-      [Unit]
-      Description=Mikrotik Cloud Hosted Router
-      After=network.target
+      echo "Initiating reboot..."
+      # Schedule a reboot in 1 minute to allow the script to complete
+      shutdown -r +1 "Rebooting to complete MikroTik CHR installation" &
 
-      [Service]
-      Type=simple
-      ExecStart=/usr/bin/qemu-system-x86_64 -m 256 -hda /opt/chr/chr-6.49.6.img -nographic
-      Restart=always
-
-      [Install]
-      WantedBy=multi-user.target
-      EOL
-
-      # Enable and start the service
-      systemctl enable chr.service
-      systemctl start chr.service
+      echo "Flash script completed at $(date)"
     EOF
     )
   }

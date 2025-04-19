@@ -27,5 +27,5 @@ inputs = {
   network_security_group_id = dependency.network.outputs.network_security_group_id
   ssh_public_key_path     = "${get_repo_root()}/ansible/keys/id_rsa.pub"
   # Oracle Linux 8 for ARM
-  image_ocid              = "ocid1.image.oc1.eu-amsterdam-1.aaaaaaaafkbieqzlgvjlnvdkfzoyy6at5n3xk2nu5wkmu7otjz6wxfn6eqnq"
+  image_ocid              = "ocid1.image.oc1.eu-amsterdam-1.aaaaaaaahc3kbflujx4g536l4yuzzy7udc6ltwlbt7iqbkt33i6zx62yy7va"
 }
