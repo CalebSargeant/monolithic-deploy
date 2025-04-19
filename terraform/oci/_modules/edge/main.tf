@@ -21,30 +21,4 @@ resource "oci_core_instance" "this" {
     source_type = "image"
     source_id   = var.image_ocid
   }
-
-  metadata = {
-    ssh_authorized_keys = file(var.ssh_public_key_path)
-    user_data = base64encode(<<-EOF
-      #!/bin/bash
-      # flash.sh - Flash MikroTik CHR image and reboot
-      # This script will download a pre-baked CHR image,
-      # write it to /dev/sda, and then reboot the machine.
-
-      set +e
-
-      # Log to a file for debugging
-      exec > >(tee /var/log/chr-install.log) 2>&1
-
-      echo "Starting CHR installation at $(date)"
-      echo "Downloading and flashing CHR image..."
-      curl -L "https://github.com/CalebSargeant/mikrotik-chr/releases/download/v7.18.2/chr.img.gz" | gunzip | dd of=/dev/sda bs=1M || :
-
-      echo "Initiating reboot..."
-      # Schedule a reboot in 1 minute to allow the script to complete
-      shutdown -r +1 "Rebooting to complete MikroTik CHR installation" &
-
-      echo "Flash script completed at $(date)"
-    EOF
-    )
-  }
 }
