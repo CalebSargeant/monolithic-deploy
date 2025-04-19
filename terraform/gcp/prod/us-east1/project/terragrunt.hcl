@@ -8,8 +8,8 @@ locals {
 }
 
 inputs = {
-  project_name    = "firefly"
-  project_id      = "firefly-sargeant"
+  project_name    = "Main"
+  project_id      = "magmamoose"
   org_id          = "643364675450"
   billing_account = "01A083-026476-9EBF66"
   region          = local.region
