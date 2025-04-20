@@ -14,7 +14,7 @@ resource "oci_core_internet_gateway" "this" {
 
 resource "oci_core_route_table" "this" {
   compartment_id = var.compartment_ocid
-  display_name   = "rt-${var.environment}"
+  display_name   = "rt-edge-${var.environment}"
   vcn_id         = oci_core_virtual_network.this.id
 
   route_rules {

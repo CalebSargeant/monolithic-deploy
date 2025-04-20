@@ -4,38 +4,36 @@ data "oci_identity_availability_domains" "ads" {
   compartment_id = var.tenancy_ocid
 }
 
-# Get the VCN ID from the subnet
-data "oci_core_subnet" "server_subnet" {
-  subnet_id = var.subnet_id
-}
-
-# Get the existing private IP for the edge CHR
-data "oci_core_private_ips" "edge_private_ips" {
-  count   = var.edge_private_ip != "" ? 1 : 0
+# Look up the private IP OCID using the edge instance's private IP
+data "oci_core_private_ips" "edge_private_ip" {
+  count = var.edge_private_ip != "" ? 1 : 0
   ip_address = var.edge_private_ip
   subnet_id  = var.subnet_id
 }
 
-# Get the VNIC attachment for the edge CHR
-data "oci_core_vnic_attachments" "edge_vnic_attachments" {
-  count          = var.edge_private_ip != "" ? 1 : 0
-  compartment_id = var.compartment_ocid
-  instance_id    = var.edge_instance_id
-}
-
-# Create a route table that routes all traffic through the edge CHR if edge_private_ip is provided
+### Create the server subnet for the edge routing
 resource "oci_core_route_table" "edge_router" {
-  count          = var.edge_private_ip != "" ? 1 : 0
+  count         = var.edge_private_ip != "" ? 1 : 0
   compartment_id = var.compartment_ocid
-  display_name   = "${var.environment}-edge-router"
-  vcn_id         = data.oci_core_subnet.server_subnet.vcn_id
+  display_name   = "rt-server-${var.environment}"
+  vcn_id         = var.vcn_id
 
   # Route all traffic through the edge CHR
   route_rules {
     destination       = "0.0.0.0/0"
     destination_type  = "CIDR_BLOCK"
-    network_entity_id = data.oci_core_private_ips.edge_private_ips[0].private_ips[0].id
+    network_entity_id = data.oci_core_private_ips.edge_private_ip[0].private_ips[0].id
   }
+}
+
+resource "oci_core_subnet" "this" {
+  compartment_id    = var.compartment_ocid
+  vcn_id            = var.vcn_id
+  display_name      = "subnet-server-${var.environment}"
+  cidr_block        = var.subnet_cidr
+  route_table_id    = var.edge_private_ip != "" ? oci_core_route_table.edge_router[0].id : null
+  dns_label         = "serversubnet"
+  prohibit_public_ip_on_vnic = true
 }
 
 resource "oci_core_instance" "this" {
@@ -50,7 +48,7 @@ resource "oci_core_instance" "this" {
   }
 
   create_vnic_details {
-    subnet_id        = var.subnet_id
+    subnet_id        = oci_core_subnet.this.id
     assign_public_ip = false
     nsg_ids          = [var.network_security_group_id]
   }

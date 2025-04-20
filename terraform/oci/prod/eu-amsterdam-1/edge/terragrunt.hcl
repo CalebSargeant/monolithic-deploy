@@ -27,6 +27,7 @@ inputs = {
   subnet_id               = dependency.network.outputs.subnet_id
   network_security_group_id = dependency.network.outputs.network_security_group_id
   ssh_public_key_path     = "${get_repo_root()}/ansible/keys/id_rsa.pub"
+  vcn_id = dependency.network.outputs.vcn_id
   # Oracle Linux 8 for x86
   image_ocid              = "ocid1.image.oc1.eu-amsterdam-1.aaaaaaaaf6i6b6t7eedgqku6a2whieyfeeit3wl4l366meurvkc4btc4tgha"
 }

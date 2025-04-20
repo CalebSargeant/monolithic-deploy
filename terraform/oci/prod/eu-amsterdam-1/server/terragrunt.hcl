@@ -35,4 +35,7 @@ inputs = {
   # Route all traffic through the edge CHR
   edge_private_ip         = dependency.edge.outputs.private_ip
   edge_instance_id        = dependency.edge.outputs.instance_id
+  subnet_cidr             = "172.17.1.0/24"
+    vcn_id = dependency.network.outputs.vcn_id
+
 }

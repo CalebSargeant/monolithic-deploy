@@ -8,9 +8,9 @@ variable "compartment_ocid" {
   type        = string
 }
 
-variable "region" {
-  description = "OCI region"
-  type        = string
+variable "vcn_id" {
+  description = "OCID of the VCN"
+  type = string
 }
 
 variable "environment" {

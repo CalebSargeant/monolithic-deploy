@@ -69,3 +69,13 @@ variable "edge_instance_id" {
   type        = string
   default     = ""  # Required if edge_private_ip is provided
 }
+
+variable "vcn_id" {
+  description = "ID of the VCN"
+  type        = string
+}
+
+variable "subnet_cidr" {
+  description = "CIDR of the subnet"
+  type        = string
+}
