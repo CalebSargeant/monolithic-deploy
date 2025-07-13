@@ -12,6 +12,7 @@ resources:
   - sonarr
   - homebridge
   - jackett
+  - flaresolverr
   - bazarr
 #  - uptime-kuma
   - prometheus
