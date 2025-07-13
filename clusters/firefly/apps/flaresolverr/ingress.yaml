@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: flaresolverr-ingress
+  namespace: media
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    cert-manager.io/cluster-issuer: letsencrypt-dns
+    traefik.ingress.kubernetes.io/service.serversscheme: http
+    traefik.ingress.kubernetes.io/entrypoints: websecure
+  labels:
+    app: flaresolverr
+spec:
+  rules:
+    - host: flaresolverr.sargeant.co # Replace with your domain
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: flaresolverr
+                port:
+                  number: 8191
+  tls:
+    - hosts:
+        - flaresolverr.sargeant.co # Replace with your domain
+      secretName: flaresolverr-tls # Secret for TLS certificate
