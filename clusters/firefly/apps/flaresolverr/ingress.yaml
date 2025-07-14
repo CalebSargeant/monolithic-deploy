@@ -25,4 +25,4 @@ spec:
   tls:
     - hosts:
         - flaresolverr.sargeant.co # Replace with your domain
-      secretName: flaresolverr-tls # Secret for TLS certificate
+      secretName: flaresolverr-tls # Secret for TLS certificate;p
