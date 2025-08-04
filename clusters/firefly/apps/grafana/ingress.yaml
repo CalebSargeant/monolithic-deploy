@@ -7,12 +7,22 @@ metadata:
     kubernetes.io/ingress.class: traefik
     cert-manager.io/cluster-issuer: letsencrypt-dns
     traefik.ingress.kubernetes.io/service.serversscheme: http
-    traefik.ingress.kubernetes.io/entrypoints: websecure
+    traefik.ingress.kubernetes.io/entrypoints: web,websecure
   labels:
     app: grafana
 spec:
   rules:
-    - host: grafana.sargeant.co # Replace with your domain
+    - host: grafana.sargeant.co
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: grafana
+                port:
+                  number: 3000
+    - host: grafana.sargeant.local
       http:
         paths:
           - path: /
@@ -24,5 +34,5 @@ spec:
                   number: 3000
   tls:
     - hosts:
-        - grafana.sargeant.co # Replace with your domain
-      secretName: grafana-tls # Secret for TLS certificate
+        - grafana.sargeant.co
+      secretName: grafana-tls
