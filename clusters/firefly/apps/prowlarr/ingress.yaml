@@ -12,7 +12,17 @@ metadata:
     app: prowlarr
 spec:
   rules:
-    - host: prowlarr.sargeant.co # Replace with your domain
+    - host: prowlarr.sargeant.co
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: prowlarr
+                port:
+                  number: 9696
+    - host: prowlarr.sargeant.local
       http:
         paths:
           - path: /
@@ -24,5 +34,5 @@ spec:
                   number: 9696
   tls:
     - hosts:
-        - prowlarr.sargeant.co # Replace with your domain
-      secretName: prowlarr-tls # Secret for TLS certificate
+        - prowlarr.sargeant.co
+      secretName: prowlarr-tls
