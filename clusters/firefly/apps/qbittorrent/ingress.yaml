@@ -12,7 +12,17 @@ metadata:
     app: qbittorrent
 spec:
   rules:
-    - host: qbittorrent.sargeant.co # Replace with your domain
+    - host: qbittorrent.sargeant.co
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: qbittorrent
+                port:
+                  number: 8080
+    - host: qbittorrent.sargeant.local
       http:
         paths:
           - path: /
@@ -24,5 +34,5 @@ spec:
                   number: 8080
   tls:
     - hosts:
-        - qbittorrent.sargeant.co # Replace with your domain
-      secretName: qbittorrent-tls # Secret for TLS certificate
+        - qbittorrent.sargeant.co
+      secretName: qbittorrent-tls

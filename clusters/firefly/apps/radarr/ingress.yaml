@@ -12,7 +12,17 @@ metadata:
     app: radarr
 spec:
   rules:
-    - host: radarr.sargeant.co # Replace with your domain
+    - host: radarr.sargeant.co
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: radarr
+                port:
+                  number: 7878
+    - host: radarr.sargeant.local
       http:
         paths:
           - path: /
@@ -24,5 +34,5 @@ spec:
                   number: 7878
   tls:
     - hosts:
-        - radarr.sargeant.co # Replace with your domain
-      secretName: radarr-tls # Secret for TLS certificate
+        - radarr.sargeant.co
+      secretName: radarr-tls

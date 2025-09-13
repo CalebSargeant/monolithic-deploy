@@ -12,7 +12,17 @@ metadata:
     app: sonarr
 spec:
   rules:
-    - host: sonarr.sargeant.co # Replace with your domain
+    - host: sonarr.sargeant.co
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sonarr
+                port:
+                  number: 8989
+    - host: sonarr.sargeant.local
       http:
         paths:
           - path: /
@@ -24,5 +34,5 @@ spec:
                   number: 8989
   tls:
     - hosts:
-        - sonarr.sargeant.co # Replace with your domain
-      secretName: sonarr-tls # Secret for TLS certificate
+        - sonarr.sargeant.co
+      secretName: sonarr-tls
