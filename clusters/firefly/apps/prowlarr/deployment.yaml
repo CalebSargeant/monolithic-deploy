@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: prowlarr
-          image: linuxserver/prowlarr:2.0.5.5160
+          image: linuxserver/prowlarr:latest
           ports:
             - containerPort: 9696 # Prowlarr web interface
           env:
