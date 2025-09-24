@@ -61,9 +61,9 @@ create_monitoring_script() {
     cat > "$SCRIPT_PATH" << 'EOF'
 #!/bin/bash
 
-# Auto-shutdown script for macOS - FORCE SHUTDOWN VERSION
-# Monitors system idle time and FORCE shuts down after 30 minutes of inactivity
-# NO PROTECTION CHECKS - Use 'caffeinate' if you need to prevent shutdown
+# Auto-shutdown script for macOS - GRACEFUL SHUTDOWN VERSION
+# Monitors system idle time and gracefully shuts down after 30 minutes of inactivity
+# Gives applications time to close properly - Use 'caffeinate' if you need to prevent shutdown
 
 # Configuration
 IDLE_THRESHOLD=1800  # 30 minutes in seconds
@@ -90,35 +90,47 @@ get_idle_time() {
     fi
 }
 
-# Function to perform FORCE shutdown - NO CHECKS
+# Function to perform graceful but forced shutdown
 perform_shutdown() {
-    log_message "FORCE SHUTDOWN: System has been idle for $IDLE_THRESHOLD seconds. Initiating immediate shutdown."
+    log_message "GRACEFUL SHUTDOWN: System has been idle for $IDLE_THRESHOLD seconds. Initiating shutdown sequence."
     
-    # Send notification (if running in user context)
+    # Send notification with more time for users to react
     if command -v osascript > /dev/null 2>&1; then
-        osascript -e 'display notification "FORCE SHUTDOWN due to inactivity in 5 seconds - Use caffeinate to prevent" with title "Auto Shutdown"' 2>/dev/null || true
+        osascript -e 'display notification "SHUTDOWN due to inactivity in 30 seconds - Use caffeinate to prevent" with title "Auto Shutdown" sound name "Glass"' 2>/dev/null || true
     fi
     
-    # Wait a moment for notification to display
-    sleep 5
+    # Log the 30-second warning
+    log_message "WARNING: Shutdown in 30 seconds. Applications will be given time to close gracefully."
     
-    # FORCE shutdown - no questions asked
-    sudo /sbin/shutdown -h now
+    # Give users 30 seconds to react (save work, prevent with caffeinate, etc.)
+    sleep 30
+    
+    # Check one more time if system is still idle (user might have become active)
+    current_idle=$(get_idle_time)
+    if [[ $current_idle -lt 60 ]]; then
+        log_message "SHUTDOWN CANCELLED: User became active (idle time: $current_idle seconds)"
+        return
+    fi
+    
+    # Graceful shutdown with 1 minute delay - gives apps time to close properly
+    # This sends SIGTERM first, then SIGKILL after system default interval
+    log_message "EXECUTING SHUTDOWN: Graceful shutdown initiated with 1 minute delay for app cleanup"
+    sudo /sbin/shutdown -h +1 "System shutting down due to inactivity. Applications will be closed gracefully."
 }
 
 # Main loop
 main() {
-    log_message "Auto-shutdown service started (PID: $$) - FORCE SHUTDOWN MODE"
+    log_message "Auto-shutdown service started (PID: $$) - GRACEFUL SHUTDOWN MODE"
     log_message "Idle threshold: $IDLE_THRESHOLD seconds ($((IDLE_THRESHOLD/60)) minutes)"
     log_message "Check interval: $CHECK_INTERVAL seconds"
-    log_message "WARNING: This will FORCE shutdown regardless of running applications"
+    log_message "INFO: This will gracefully shutdown, giving applications time to close properly"
     log_message "Use 'caffeinate -d' to prevent shutdown when needed"
     
     while true; do
         idle_time=$(get_idle_time)
         
         if [[ $idle_time -ge $IDLE_THRESHOLD ]]; then
-            log_message "System idle for $idle_time seconds - INITIATING FORCE SHUTDOWN"
+            log_message "System idle for $idle_time seconds - INITIATING GRACEFUL SHUTDOWN"
             perform_shutdown
             break
         else
