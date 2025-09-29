@@ -16,7 +16,7 @@
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=CalebSargeant_infra&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=CalebSargeant_infra)
 
 <!-- Project Stats -->
-[![infracost](https://img.shields.io/endpoint?url=https://dashboard.api.infracost.io/shields/json/a160e93c-2b08-4d69-b714-28ff13449df0/repos/441cb8d1-9684-4a68-a598-dbbee033fce4/branch/4dfbca27-a9f3-4516-918a-a5808e0b72a6)](https://dashboard.infracost.io/org/github-n3hyh/repos/441cb8d1-9684-4a68-a598-dbbee033fce4?tab=branches)
+[![infracost](https://img.shields.io/endpoint?url=https://dashboard.api.infracost.io/shields/json/a160e93c-2b08-4d69-b714-28ff13449df0/repos/f87bb12c-cefc-4a81-8b99-fa8af676abc9/branch/2ee22093-5387-4cd3-b45c-afeef5628480)](https://dashboard.infracost.io/org/sargeant/repos/f87bb12c-cefc-4a81-8b99-fa8af676abc9?tab=branches)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=CalebSargeant_infra&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=CalebSargeant_infra)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=CalebSargeant_infra&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=CalebSargeant_infra)
 
