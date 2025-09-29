@@ -1,0 +1,22 @@
+---
+- name: PROWLARR container
+  docker_container:
+    name: "{{ TORRENT_PROWLARR_NAME }}"
+    hostname: "{{ TORRENT_PROWLARR_NAME }}"
+    image: "{{ TORRENT_PROWLARR_IMAGE }}"
+    #restart_policy: "no"
+    restart_policy: unless-stopped
+    #network_mode: host
+    networks:
+      - name: "{{ TORRENT_NET_NAME }}"
+        ipv4_address: "{{ TORRENT_PROWLARR_IP }}"
+    exposed_ports: "{{ TORRENT_PROWLARR_PORT }}:9696"
+    purge_networks: yes
+    networks_cli_compatible: no
+    volumes:
+      - "{{ TORRENT_PROWLARR_NAME }}:/config"
+    env:
+      PUID: "{{ PUID }}"
+      PGID: "{{ PGID }}"
+      TZ: "{{ TIMEZONE }}"
+...

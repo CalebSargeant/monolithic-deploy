@@ -1,0 +1,76 @@
+---
+- name: Create Docker Network
+  docker_network:
+    name: "{{ NET_NAME }}"
+    ipam_config:
+      - subnet: "{{ NET_SUBNET }}"
+        gateway: "{{ NET_GW }}"
+        iprange: "{{ NET_SUBNET }}"
+
+- name: Create nextcloud Container
+  docker_container:
+    name: nextcloud
+    image: lscr.io/linuxserver/nextcloud:latest
+    networks:
+      - name: "{{ NET_NAME }}"
+        ipv4_address: "{{ NEXTCLOUD_IP }}"    
+    restart_policy: unless-stopped
+    exposed_ports: "443"
+    networks_cli_compatible: yes
+    volumes:
+      - nextcloud:/config
+      - /mnt/data/nextcloud:/data
+    env:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: "Africa/Johannesburg"
+
+- name: Create mariadb Container
+  docker_container:
+    name: mariadb
+    image: lscr.io/linuxserver/mariadb:latest
+    networks:
+      - name: "{{ NET_NAME }}"
+        ipv4_address: "{{ MARIADB_IP }}"    
+    restart_policy: unless-stopped
+    exposed_ports: "3306"
+    networks_cli_compatible: yes
+    volumes:
+      - mariadb:/config
+    env:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: "Africa/Johannesburg"
+      MYSQL_ROOT_PASSWORD: "{{ MYSQL_ROOT_PASSWORD }}"
+      MYSQL_DATABASE: "nextcloud"
+      MYSQL_USER: "nextcloud"
+      MYSQL_PASSWORD: "{{ MYSQL_PASSWORD }}"
+
+# Commented out because nginx must be installed seperately - one nginx container for the whole host
+# - name: Create nginx Container
+#   docker_container:
+#     name: nginx
+#     image: lscr.io/linuxserver/nginx:latest
+#     networks:
+#       - name: "{{ NET_NAME }}"
+#         ipv4_address: "{{ NGINX_IP }}"    
+#     restart_policy: unless-stopped
+#     published_ports: 
+#       - "8443:8443"
+#     networks_cli_compatible: yes
+#     volumes:
+#       - nginx:/config
+#       - /etc/letsencrypt:/certs
+#     env:
+#       PUID: "1000"
+#       PGID: "1000"
+#       TZ: "Africa/Johannesburg"
+
+# - name: Copy Nginx config
+#   copy:
+#     src: templates/default.conf
+#     dest: /var/snap/docker/common/var-lib-docker/volumes/nginx/_data/nginx/site-confs/default.conf
+
+# - name: Restart nginx
+#   command: docker restart nginx
+...

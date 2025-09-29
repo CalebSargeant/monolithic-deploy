@@ -1,0 +1,14 @@
+---
+- name: Template default.conf
+  ansible.builtin.template:
+    src: templates/{{ SOURCE_NGINX_DEFAULT_CONF }}
+    dest: "/etc/nginx/nginx/site-confs/default.conf"
+
+- name: Copy proxy_params
+  ansible.builtin.copy:
+    src: templates/proxy_params
+    dest: "/etc/nginx/nginx/proxy_params"
+
+- name: Restart nginx
+  command: docker restart nginx
+...

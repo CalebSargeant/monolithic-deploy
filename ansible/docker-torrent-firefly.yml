@@ -1,0 +1,18 @@
+---
+- hosts: firefly
+  become: yes
+  become_method: sudo
+  vars_files:
+  - ~/repos/personal/ansible/vars/docker/torrent-firefly.yml
+  roles:
+    # - docker/torrent/network
+     - docker/torrent/plex
+    # - docker/torrent/deluge
+    # - docker/torrent/radarr
+    # - docker/torrent/sonarr
+    # - docker/torrent/prowlarr
+    # - docker/torrent/qbittorrent
+    #- docker/torrent/lazylibrarian
+    #- docker/torrent/calibre
+    #- docker/torrent/calibre-web
+...
