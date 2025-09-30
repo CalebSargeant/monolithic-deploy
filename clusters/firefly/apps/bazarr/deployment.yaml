@@ -16,6 +16,13 @@ spec:
       containers:
         - name: bazarr
           image: linuxserver/bazarr:latest
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "50m"
+            limits:
+              memory: "512Mi"
+              cpu: "200m"
           ports:
             - containerPort: 6767 # Bazarr web interface
           env:

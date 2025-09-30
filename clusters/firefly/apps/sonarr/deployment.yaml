@@ -16,6 +16,13 @@ spec:
       containers:
         - name: sonarr
           image: linuxserver/sonarr:4.0.15
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "50m"
+            limits:
+              memory: "512Mi"
+              cpu: "200m"
           ports:
             - containerPort: 8989 # sonarr web interface
           env:

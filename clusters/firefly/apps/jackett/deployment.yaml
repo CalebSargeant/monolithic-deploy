@@ -16,6 +16,13 @@ spec:
       containers:
         - name: jackett
           image: linuxserver/jackett:0.23.17
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "25m"
+            limits:
+              memory: "256Mi"
+              cpu: "100m"
           ports:
             - containerPort: 9117 # jackett web interface
           env:

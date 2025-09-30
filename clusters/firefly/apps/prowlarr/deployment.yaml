@@ -16,6 +16,13 @@ spec:
       containers:
         - name: prowlarr
           image: linuxserver/prowlarr:latest
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "25m"
+            limits:
+              memory: "256Mi"
+              cpu: "100m"
           ports:
             - containerPort: 9696 # Prowlarr web interface
           env:

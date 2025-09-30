@@ -16,6 +16,13 @@ spec:
       containers:
         - name: radarr
           image: linuxserver/radarr:5.27.5
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "50m"
+            limits:
+              memory: "512Mi"
+              cpu: "200m"
           ports:
             - containerPort: 7878 # Radarr web interface
           env:
