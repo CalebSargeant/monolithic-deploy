@@ -18,6 +18,13 @@ spec:
       containers:
         - name: homeassistant
           image: ghcr.io/home-assistant/home-assistant:stable
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "75m"
+            limits:
+              memory: "512Mi"
+              cpu: "300m"
           ports:
             - containerPort: 8123 # Home Assistant web UI
           env:

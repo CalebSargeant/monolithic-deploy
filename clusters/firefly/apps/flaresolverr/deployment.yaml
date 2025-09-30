@@ -33,11 +33,11 @@ spec:
               value: "none"
           resources:
             requests:
-              memory: "512Mi"
-              cpu: "250m"
+              memory: "128Mi"
+              cpu: "75m"
             limits:
-              memory: "1Gi"
-              cpu: "500m"
+              memory: "512Mi"
+              cpu: "300m"
           readinessProbe:
             httpGet:
               path: /

@@ -16,6 +16,13 @@ spec:
       containers:
         - name: blackbox-exporter-exporter
           image: prom/blackbox-exporter:v0.25.0
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "25m"
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
 #          args:
 #            - "--config.file=/etc/blackbox-exporter/blackbox-exporter.yml"
           ports:
