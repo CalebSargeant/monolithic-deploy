@@ -48,13 +48,13 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@ff7abcd0c3c05ccf6adc123a8cd1fd4fb30fb493 # v5.0.0
         with:
           # Disabling shallow clones is recommended for improving the relevancy of reporting
           fetch-depth: 0
 
       - name: SonarCloud Scan with SARIF
-        uses: SonarSource/sonarqube-scan-action@v6
+        uses: SonarSource/sonarqube-scan-action@5ffbad44543237d1b339a5ed57a774432e19f3e4 # v6.0.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: https://sonarcloud.io
@@ -69,14 +69,14 @@ jobs:
             ${{ github.event_name == 'pull_request' && format('-Dsonar.pullrequest.base={0}', github.base_ref) || '' }}
 
       - name: SonarQube Quality Gate Check
-        uses: SonarSource/sonarqube-quality-gate-action@master
+        uses: SonarSource/sonarqube-quality-gate-action@174f8360a05574d0a8fe9324af3c2f891ad33ddb # v1.2.0
         timeout-minutes: 5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         continue-on-error: true # Don't fail the workflow on quality gate failure
 
       - name: Upload SARIF to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@d378195403bf7cd9c9b55e4713ede0962aa58b83 # v3.30.5
         if: always() && hashFiles('sonar-report.sarif') != ''
         with:
           sarif_file: sonar-report.sarif
