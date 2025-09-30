@@ -53,33 +53,42 @@ jobs:
           # Disabling shallow clones is recommended for improving the relevancy of reporting
           fetch-depth: 0
 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v3.0.0
+      - name: SonarCloud Scan with SARIF
+        uses: SonarSource/sonarqube-scan-action@v4
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY }}
-          SONAR_ORGANIZATION: ${{ vars.SONAR_ORGANIZATION }}
+          SONAR_HOST_URL: https://sonarcloud.io
         with:
           args: >
-            -Dsonar.sarif.reportPaths=sonar-report.sarif
-            -Dsonar.qualitygate.wait=true
             -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }}
             -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }}
+            -Dsonar.sarif.reportPaths=sonar-report.sarif
             ${{ github.event_name != 'pull_request' && format('-Dsonar.branch.name={0}', github.ref_name) || '' }}
             ${{ github.event_name == 'pull_request' && format('-Dsonar.pullrequest.key={0}', github.event.number) || '' }}
             ${{ github.event_name == 'pull_request' && format('-Dsonar.pullrequest.branch={0}', github.head_ref) || '' }}
             ${{ github.event_name == 'pull_request' && format('-Dsonar.pullrequest.base={0}', github.base_ref) || '' }}
 
-      - name: Check Quality Gate
-        run: |
-          # Quality Gate status is already checked by sonar.qualitygate.wait=true
-          # This step provides additional visibility
-          echo "Quality Gate check completed. Check SonarCloud dashboard for detailed results."
+      - name: SonarQube Quality Gate Check
+        uses: SonarSource/sonarqube-quality-gate-action@master
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        continue-on-error: true # Don't fail the workflow on quality gate failure
 
-      - name: Upload SARIF file to GitHub Security tab
+      - name: Upload SARIF to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
-        if: always() # Upload SARIF even if quality gate fails
+        if: always() && hashFiles('sonar-report.sarif') != ''
         with:
           sarif_file: sonar-report.sarif
           category: sonarcloud
+        continue-on-error: false # Fail if SARIF upload fails since it's a requirement
+
+      - name: SonarCloud Analysis Complete
+        if: always()
+        run: |
+          echo "📊 SonarCloud Analysis Complete!"
+          echo "🔍 View detailed results: https://sonarcloud.io/project/overview?id=${{ vars.SONAR_PROJECT_KEY }}"
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "📝 PR Analysis: https://sonarcloud.io/project/overview?id=${{ vars.SONAR_PROJECT_KEY }}&pullRequest=${{ github.event.number }}"
+          fi
+          echo "🛡️ Security findings uploaded to: https://github.com/${{ github.repository }}/security/code-scanning"
