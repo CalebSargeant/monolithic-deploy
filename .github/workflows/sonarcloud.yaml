@@ -61,17 +61,12 @@ jobs:
           SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY }}
           SONAR_ORGANIZATION: ${{ vars.SONAR_ORGANIZATION }}
         with:
-          args:
-            # Enable SARIF report generation
+          args: >
             -Dsonar.sarif.reportPaths=sonar-report.sarif
-            # Quality Gate wait (configured in sonar-project.properties)
             -Dsonar.qualitygate.wait=true
-            # Project identification
             -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }}
             -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }}
-            # Branch analysis
             -Dsonar.branch.name=${{ github.ref_name }}
-            # Pull request decoration
             ${{ github.event_name == 'pull_request' && format('-Dsonar.pullrequest.key={0}', github.event.number) || '' }}
             ${{ github.event_name == 'pull_request' && format('-Dsonar.pullrequest.branch={0}', github.head_ref) || '' }}
             ${{ github.event_name == 'pull_request' && format('-Dsonar.pullrequest.base={0}', github.base_ref) || '' }}
