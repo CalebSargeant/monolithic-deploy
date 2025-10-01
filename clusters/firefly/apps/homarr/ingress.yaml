@@ -5,9 +5,10 @@ metadata:
   namespace: homarr
   annotations:
     kubernetes.io/ingress.class: traefik
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
     traefik.ingress.kubernetes.io/service.serversscheme: http
     traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/redirect-to-https: "true"
     cert-manager.io/cluster-issuer: letsencrypt-dns
 spec:
     tls:
