@@ -34,11 +34,6 @@ on:
         description: 'Error details if failed'
         required: false
         type: string
-      enable_reboot_button:
-        description: 'Enable interactive reboot button'
-        required: false
-        type: boolean
-        default: false
 
 jobs:
   send-notification:
@@ -50,7 +45,8 @@ jobs:
       uptime: ${{ github.event.inputs.uptime || github.event.client_payload.uptime }}
       packages_updated: ${{ github.event.inputs.packages_updated || github.event.client_payload.packages_updated }}
       error_details: ${{ github.event.inputs.error_details || github.event.client_payload.error_details }}
-      enable_reboot_button: ${{ github.event.inputs.enable_reboot_button == 'true' || github.event.client_payload.enable_reboot_button == true }}
     secrets:
       SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-      SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
+      SLACK_ENGINEERING_ALERTS_CHANNEL: ${{ secrets.SLACK_ENGINEERING_ALERTS_CHANNEL }}
+      SLACK_ENGINEERING_WARNINGS_CHANNEL: ${{ secrets.SLACK_ENGINEERING_WARNINGS_CHANNEL }}
+      SLACK_ENGINEERING_INFO_CHANNEL: ${{ secrets.SLACK_ENGINEERING_INFO_CHANNEL }}
