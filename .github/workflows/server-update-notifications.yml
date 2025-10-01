@@ -15,7 +15,7 @@ on:
         type: choice
         options:
           - success
-          - reboot_required  
+          - reboot_required
           - failed
           - skipped
       message:
@@ -45,8 +45,4 @@ jobs:
       uptime: ${{ github.event.inputs.uptime || github.event.client_payload.uptime }}
       packages_updated: ${{ github.event.inputs.packages_updated || github.event.client_payload.packages_updated }}
       error_details: ${{ github.event.inputs.error_details || github.event.client_payload.error_details }}
-    secrets:
-      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-      SLACK_ENGINEERING_ALERTS_CHANNEL: ${{ secrets.SLACK_ENGINEERING_ALERTS_CHANNEL }}
-      SLACK_ENGINEERING_WARNINGS_CHANNEL: ${{ secrets.SLACK_ENGINEERING_WARNINGS_CHANNEL }}
-      SLACK_ENGINEERING_INFO_CHANNEL: ${{ secrets.SLACK_ENGINEERING_INFO_CHANNEL }}
+    secrets: inherit
