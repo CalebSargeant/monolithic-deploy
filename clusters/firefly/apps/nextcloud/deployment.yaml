@@ -24,7 +24,7 @@ spec:
               memory: "512Mi"
               cpu: "300m"
           ports:
-            - containerPort: 8080
+            - containerPort: 80
           env:
             - name: PUID
               value: "1000"
