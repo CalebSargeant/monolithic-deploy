@@ -16,48 +16,69 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet # Adjust DNS policy when using host networking
       initContainers:
         - name: upgrade-nodejs
-          image: alpine:3.18
-          command: ["/bin/sh"]
+          image: debian:12-slim
+          command: ["/bin/bash"]
           args:
             - "-c"
             - |
-              echo "Upgrading Node.js to latest version with PKCS1 support..."
-              apk add --no-cache curl tar xz
+              echo "🚀 Installing latest Node.js with PKCS1 support and upgrading Eufy plugin..."
+              apt-get update && apt-get install -y curl xz-utils ca-certificates jq --no-install-recommends && rm -rf /var/lib/apt/lists/*
               
-              # Get latest Node.js version (use a specific known good version with PKCS1 support)
-              # Using Node.js v22.11.0 which has restored PKCS1 support
-              LATEST_NODE="22.11.0"
-              echo "Installing Node.js version: $LATEST_NODE"
+              # Detect architecture
+              ARCH=$(uname -m)
+              case $ARCH in
+                  x86_64) NODE_ARCH="x64" ;;
+                  aarch64) NODE_ARCH="arm64" ;;
+                  armv7l) NODE_ARCH="armv7l" ;;
+                  *) echo "❌ Unsupported architecture: $ARCH"; exit 1 ;;
+              esac
+              echo "🔍 Detected architecture: $ARCH -> Node.js arch: $NODE_ARCH"
+              
+              # Get the absolute latest Node.js version dynamically
+              echo "🔍 Fetching latest Node.js version..."
+              LATEST_NODE=$(curl -s https://nodejs.org/dist/index.json | jq -r '.[0].version' | sed 's/^v//')
+              echo "📦 Latest Node.js version: $LATEST_NODE"
               
               # Download and extract Node.js
               cd /tmp
-              echo "Downloading Node.js..."
-              curl -fsSL https://nodejs.org/dist/v$LATEST_NODE/node-v$LATEST_NODE-linux-x64.tar.xz -o node.tar.xz
-              echo "Extracting Node.js..."
+              echo "⬇️ Downloading Node.js $LATEST_NODE for $NODE_ARCH..."
+              curl -fsSL https://nodejs.org/dist/v$LATEST_NODE/node-v$LATEST_NODE-linux-$NODE_ARCH.tar.xz -o node.tar.xz
+              echo "📦 Extracting Node.js..."
               tar -xJf node.tar.xz
               
               # Verify extraction was successful
-              if [ ! -d "node-v$LATEST_NODE-linux-x64" ]; then
-                echo "ERROR: Node.js extraction failed"
+              if [ ! -d "node-v$LATEST_NODE-linux-$NODE_ARCH" ]; then
+                echo "❌ ERROR: Node.js extraction failed"
                 exit 1
               fi
               
-              # Replace Node.js in shared volume
-              echo "Installing Node.js to shared volume..."
-              cp -rf node-v$LATEST_NODE-linux-x64/* /opt/homebridge/
+              # Install Node.js to separate directory
+              echo "📁 Installing Node.js to shared volume..."
+              mkdir -p /opt/nodejs
+              cp -rf node-v$LATEST_NODE-linux-$NODE_ARCH/* /opt/nodejs/
               
               # Set permissions
-              chmod +x /opt/homebridge/bin/node
-              chmod +x /opt/homebridge/bin/npm
-              chmod +x /opt/homebridge/bin/npx
+              chmod +x /opt/nodejs/bin/node
+              chmod +x /opt/nodejs/bin/npm
+              chmod +x /opt/nodejs/bin/npx
               
               # Verify the installation
-              echo "Verifying Node.js installation..."
-              /opt/homebridge/bin/node --version
-              echo "Node.js upgrade completed successfully"
+              echo "✅ Verifying Node.js installation..."
+              /opt/nodejs/bin/node --version
+              /opt/nodejs/bin/npm --version
+              
+              # Upgrade EufySecurity plugin to latest version
+              echo "🔄 Upgrading homebridge-eufy-security plugin to latest version..."
+              cd /homebridge
+              /opt/nodejs/bin/npm install homebridge-eufy-security@latest --save
+              echo "✅ Plugin upgrade completed"
+              
+              echo "🎉 Node.js upgrade and plugin update completed successfully!"
           volumeMounts:
-            - mountPath: /opt/homebridge
+            - mountPath: /opt/nodejs
               name: nodejs-upgrade
+            - mountPath: /homebridge
+              name: homebridge
       containers:
         - name: homebridge
           image: homebridge/homebridge:2024-01-08
@@ -75,11 +96,11 @@ spec:
             - name: TZ
               value: "Europe/Amsterdam" # Adjust timezone
             - name: PATH
-              value: "/opt/homebridge/bin:$PATH" # Use upgraded Node.js first
+              value: "/opt/nodejs/bin:$PATH" # Use upgraded Node.js first
           volumeMounts:
             - mountPath: /homebridge
               name: homebridge
-            - mountPath: /opt/homebridge
+            - mountPath: /opt/nodejs
               name: nodejs-upgrade
       volumes:
         - name: homebridge
