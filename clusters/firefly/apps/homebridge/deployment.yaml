@@ -29,22 +29,32 @@ spec:
               LATEST_NODE="22.11.0"
               echo "Installing Node.js version: $LATEST_NODE"
               
+              # Detect architecture
+              ARCH=$(uname -m)
+              case $ARCH in
+                  x86_64) NODE_ARCH="x64" ;;
+                  aarch64) NODE_ARCH="arm64" ;;
+                  armv7l) NODE_ARCH="armv7l" ;;
+                  *) echo "Unsupported architecture: $ARCH"; exit 1 ;;
+              esac
+              echo "Detected architecture: $ARCH -> Node.js arch: $NODE_ARCH"
+              
               # Download and extract Node.js
               cd /tmp
               echo "Downloading Node.js..."
-              curl -fsSL https://nodejs.org/dist/v$LATEST_NODE/node-v$LATEST_NODE-linux-x64.tar.xz -o node.tar.xz
+              curl -fsSL https://nodejs.org/dist/v$LATEST_NODE/node-v$LATEST_NODE-linux-$NODE_ARCH.tar.xz -o node.tar.xz
               echo "Extracting Node.js..."
               tar -xJf node.tar.xz
               
               # Verify extraction was successful
-              if [ ! -d "node-v$LATEST_NODE-linux-x64" ]; then
+              if [ ! -d "node-v$LATEST_NODE-linux-$NODE_ARCH" ]; then
                 echo "ERROR: Node.js extraction failed"
                 exit 1
               fi
               
               # Replace Node.js in shared volume
               echo "Installing Node.js to shared volume..."
-              cp -rf node-v$LATEST_NODE-linux-x64/* /opt/homebridge/
+              cp -rf node-v$LATEST_NODE-linux-$NODE_ARCH/* /opt/homebridge/
               
               # Set permissions
               chmod +x /opt/homebridge/bin/node
