@@ -4,6 +4,8 @@ resources:
   - namespace.yaml
   - deployment.yaml
   - service.yaml
+  - configmap.yaml
   - ingress.yaml
+  - middleware.yaml
   - pvc.yaml
   - pv.yaml

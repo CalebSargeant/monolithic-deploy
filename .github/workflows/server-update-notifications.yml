@@ -15,7 +15,6 @@ on:
         type: choice
         options:
           - success
-
           - reboot_required
           - failed
           - skipped
