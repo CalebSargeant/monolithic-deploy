@@ -70,8 +70,28 @@ spec:
               # Upgrade EufySecurity plugin to latest version
               echo "🔄 Upgrading homebridge-eufy-security plugin to latest version..."
               cd /homebridge
-              /opt/nodejs/bin/npm install homebridge-eufy-security@latest --save
-              echo "✅ Plugin upgrade completed"
+              
+              # Set up proper environment for npm
+              export PATH="/opt/nodejs/bin:$PATH"
+              export NODE_PATH="/opt/nodejs/lib/node_modules"
+              
+              # Install required tools if missing
+              which git || (apt-get update && apt-get install -y git)
+              
+              # Upgrade the plugin with verbose output
+              echo "📦 Installing homebridge-eufy-security@latest..."
+              /opt/nodejs/bin/npm install homebridge-eufy-security@latest --save --verbose || {
+                echo "⚠️  Initial install failed, trying with --force flag..."
+                /opt/nodejs/bin/npm install homebridge-eufy-security@latest --save --force
+              }
+              
+              # Verify plugin installation
+              if [ -d "node_modules/homebridge-eufy-security" ]; then
+                echo "✅ Plugin upgrade completed successfully"
+                /opt/nodejs/bin/npm list homebridge-eufy-security
+              else
+                echo "⚠️  Plugin directory not found, but continuing..."
+              fi
               
               echo "🎉 Node.js upgrade and plugin update completed successfully!"
           volumeMounts:
@@ -81,7 +101,7 @@ spec:
               name: homebridge
       containers:
         - name: homebridge
-          image: homebridge/homebridge:2024-01-08
+          image: homebridge/homebridge:2025-09-28
           resources:
             requests:
               memory: "256Mi"
