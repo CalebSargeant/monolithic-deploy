@@ -16,13 +16,13 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet # Adjust DNS policy when using host networking
       initContainers:
         - name: upgrade-nodejs
-          image: alpine:3.18
-          command: ["/bin/sh"]
+          image: debian:12-slim
+          command: ["/bin/bash"]
           args:
             - "-c"
             - |
               echo "Upgrading Node.js to latest version with PKCS1 support..."
-              apk add --no-cache curl tar xz
+              apt-get update && apt-get install -y curl xz-utils ca-certificates --no-install-recommends && rm -rf /var/lib/apt/lists/*
               
               # Get latest Node.js version (use a specific known good version with PKCS1 support)
               # Using Node.js v22.11.0 which has restored PKCS1 support
