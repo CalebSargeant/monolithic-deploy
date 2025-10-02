@@ -14,6 +14,35 @@ spec:
     spec:
       hostNetwork: true
       dnsPolicy: ClusterFirstWithHostNet # Adjust DNS policy when using host networking
+      initContainers:
+        - name: upgrade-nodejs
+          image: alpine:3.18
+          command: ["/bin/sh"]
+          args:
+            - "-c"
+            - |
+              echo "Upgrading Node.js to latest version with PKCS1 support..."
+              apk add --no-cache curl tar
+              
+              # Get latest Node.js version
+              LATEST_NODE=$(curl -s https://nodejs.org/dist/index.json | grep '"version":' | head -1 | sed 's/.*"v\([^"]*\)".*/\1/')
+              echo "Latest Node.js version: $LATEST_NODE"
+              
+              # Download and extract Node.js
+              cd /tmp
+              curl -fsSL https://nodejs.org/dist/v$LATEST_NODE/node-v$LATEST_NODE-linux-x64.tar.xz | tar -xJ
+              
+              # Replace Node.js in shared volume
+              cp -rf node-v$LATEST_NODE-linux-x64/* /opt/homebridge/
+              
+              # Set permissions
+              chmod +x /opt/homebridge/bin/node
+              chmod +x /opt/homebridge/bin/npm
+              
+              echo "Node.js upgrade completed: $(node --version)"
+          volumeMounts:
+            - mountPath: /opt/homebridge
+              name: nodejs-upgrade
       containers:
         - name: homebridge
           image: homebridge/homebridge:2024-01-08
@@ -33,7 +62,11 @@ spec:
           volumeMounts:
             - mountPath: /homebridge
               name: homebridge
+            - mountPath: /opt/homebridge
+              name: nodejs-upgrade
       volumes:
         - name: homebridge
           persistentVolumeClaim:
             claimName: homebridge
+        - name: nodejs-upgrade
+          emptyDir: {}
