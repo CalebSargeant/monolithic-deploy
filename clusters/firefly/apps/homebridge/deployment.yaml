@@ -17,7 +17,7 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet # Adjust DNS policy when using host networking
       containers:
         - name: homebridge
-          image: homebridge/homebridge:2024-05-02
+          image: homebridge/homebridge:2024-01-08
           resources:
             requests:
               memory: "128Mi"
@@ -31,8 +31,6 @@ spec:
           env:
             - name: TZ
               value: "Europe/Amsterdam" # Adjust timezone
-            - name: NODE_OPTIONS
-              value: "--security-revert=CVE-2023-46809"
           volumeMounts:
             - mountPath: /homebridge
               name: homebridge
