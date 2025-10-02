@@ -44,19 +44,20 @@ spec:
               
               # Replace Node.js in shared volume
               echo "Installing Node.js to shared volume..."
-              cp -rf node-v$LATEST_NODE-linux-x64/* /opt/homebridge/
+              mkdir -p /opt/nodejs
+              cp -rf node-v$LATEST_NODE-linux-$NODE_ARCH/* /opt/nodejs/
               
               # Set permissions
-              chmod +x /opt/homebridge/bin/node
-              chmod +x /opt/homebridge/bin/npm
-              chmod +x /opt/homebridge/bin/npx
+              chmod +x /opt/nodejs/bin/node
+              chmod +x /opt/nodejs/bin/npm
+              chmod +x /opt/nodejs/bin/npx
               
               # Verify the installation
               echo "Verifying Node.js installation..."
-              /opt/homebridge/bin/node --version
+              /opt/nodejs/bin/node --version
               echo "Node.js upgrade completed successfully"
           volumeMounts:
-            - mountPath: /opt/homebridge
+            - mountPath: /opt/nodejs
               name: nodejs-upgrade
       containers:
         - name: homebridge
@@ -75,11 +76,11 @@ spec:
             - name: TZ
               value: "Europe/Amsterdam" # Adjust timezone
             - name: PATH
-              value: "/opt/homebridge/bin:$PATH" # Use upgraded Node.js first
+              value: "/opt/nodejs/bin:$PATH" # Use upgraded Node.js first
           volumeMounts:
             - mountPath: /homebridge
               name: homebridge
-            - mountPath: /opt/homebridge
+            - mountPath: /opt/nodejs
               name: nodejs-upgrade
       volumes:
         - name: homebridge
