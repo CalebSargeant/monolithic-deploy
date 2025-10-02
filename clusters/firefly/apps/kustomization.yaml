@@ -21,3 +21,4 @@ resources:
   - postgres
   - timemachine
   - homarr
+  - overseerr
