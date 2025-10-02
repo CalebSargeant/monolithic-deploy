@@ -22,24 +22,39 @@ spec:
             - "-c"
             - |
               echo "Upgrading Node.js to latest version with PKCS1 support..."
-              apk add --no-cache curl tar
+              apk add --no-cache curl tar xz
               
-              # Get latest Node.js version
-              LATEST_NODE=$(curl -s https://nodejs.org/dist/index.json | grep '"version":' | head -1 | sed 's/.*"v\([^"]*\)".*/\1/')
-              echo "Latest Node.js version: $LATEST_NODE"
+              # Get latest Node.js version (use a specific known good version with PKCS1 support)
+              # Using Node.js v22.11.0 which has restored PKCS1 support
+              LATEST_NODE="22.11.0"
+              echo "Installing Node.js version: $LATEST_NODE"
               
               # Download and extract Node.js
               cd /tmp
-              curl -fsSL https://nodejs.org/dist/v$LATEST_NODE/node-v$LATEST_NODE-linux-x64.tar.xz | tar -xJ
+              echo "Downloading Node.js..."
+              curl -fsSL https://nodejs.org/dist/v$LATEST_NODE/node-v$LATEST_NODE-linux-x64.tar.xz -o node.tar.xz
+              echo "Extracting Node.js..."
+              tar -xJf node.tar.xz
+              
+              # Verify extraction was successful
+              if [ ! -d "node-v$LATEST_NODE-linux-x64" ]; then
+                echo "ERROR: Node.js extraction failed"
+                exit 1
+              fi
               
               # Replace Node.js in shared volume
+              echo "Installing Node.js to shared volume..."
               cp -rf node-v$LATEST_NODE-linux-x64/* /opt/homebridge/
               
               # Set permissions
               chmod +x /opt/homebridge/bin/node
               chmod +x /opt/homebridge/bin/npm
+              chmod +x /opt/homebridge/bin/npx
               
-              echo "Node.js upgrade completed: $(node --version)"
+              # Verify the installation
+              echo "Verifying Node.js installation..."
+              /opt/homebridge/bin/node --version
+              echo "Node.js upgrade completed successfully"
           volumeMounts:
             - mountPath: /opt/homebridge
               name: nodejs-upgrade
@@ -59,6 +74,8 @@ spec:
           env:
             - name: TZ
               value: "Europe/Amsterdam" # Adjust timezone
+            - name: PATH
+              value: "/opt/homebridge/bin:$PATH" # Use upgraded Node.js first
           volumeMounts:
             - mountPath: /homebridge
               name: homebridge
