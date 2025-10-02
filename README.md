@@ -94,9 +94,31 @@ curl -sSL https://raw.githubusercontent.com/calebsargeant/reusable-workflows/mai
   --randomized-delay 1800
 ```
 
-#### Step 2: Configure GitHub Token
+#### Step 2: Configure GitHub Token (Required)
 
-After installation, add your GitHub Personal Access Token:
+**🔑 Why is a GitHub token needed?**
+
+The GitHub token allows servers to send notifications by:
+- 🚀 Triggering GitHub Actions workflows via repository dispatch events
+- 🔐 Authenticating with GitHub API to access your `calebsargeant/infra` repository
+- 📡 Sending update status that gets routed to appropriate Slack channels
+
+**Security Benefits:**
+- ✅ No Slack tokens stored on servers (only in GitHub repository secrets)
+- ✅ Centralized notification logic in GitHub Actions  
+- ✅ Limited scope: only needs `repo` access
+
+**Create a GitHub Personal Access Token:**
+
+1. Go to **[GitHub Settings → Personal Access Tokens](https://github.com/settings/tokens)**
+2. Click **"Generate new token (classic)"**
+3. Set **Token name**: `Auto-Update System`
+4. Set **Expiration**: `No expiration` (or your preferred timeframe)
+5. Select **Scopes**: ✅ `repo` (Full control of private repositories)
+6. Click **"Generate token"** 
+7. **Copy the token immediately** (you won't see it again!)
+
+**Add token to server configuration:**
 
 ```bash
 sudo nano /etc/default/auto-update
@@ -104,13 +126,11 @@ sudo nano /etc/default/auto-update
 
 Uncomment and set your GitHub token:
 ```bash
+# GitHub Personal Access Token for repository dispatch
 GITHUB_TOKEN="ghp_your_personal_access_token_here"
 ```
 
-**To create a GitHub token:**
-1. Go to [GitHub Settings → Personal Access Tokens](https://github.com/settings/tokens)
-2. Create a new token with `repo` scope
-3. Copy the token and add it to the config file
+**⚠️ Important:** The same GitHub token can be used on multiple servers. Store it securely and never commit it to version control.
 
 #### Step 3: Verify Installation
 
@@ -172,6 +192,48 @@ sudo nano /etc/default/auto-update
 # Change:
 GITHUB_REPO="your-org/your-repo"
 ```
+
+### 🏢 How It Works - Complete Architecture
+
+```
+💻 Server (Proxmox/Ubuntu/etc)
+     │
+     │ GitHub Token (ghp_...)
+     ↓ 
+🌐 GitHub API
+     │ POST /repos/calebsargeant/infra/dispatches
+     │ {
+     │   "event_type": "server-update",
+     │   "client_payload": {
+     │     "server_name": "proxmox",
+     │     "status": "success|failed|reboot_required", 
+     │     "message": "Updates completed",
+     │     "uptime": "up 15 days"
+     │   }
+     │ }
+     ↓
+🏗️ GitHub Actions Workflow
+     │ .github/workflows/server-update-notifications.yml
+     │ 
+     │ Channel Routing Logic:
+     ├── if status == "failed" → ALERTS_CHANNEL
+     ├── if status == "reboot_required" → WARNINGS_CHANNEL
+     └── if status == "success|skipped" → INFO_CHANNEL
+     ↓
+🗨️ Slack API
+     │ Using SLACK_BOT_TOKEN (stored in repo secrets)
+     ↓
+📱 Slack Channels
+     ├── 🚨 #engineering-alerts (failures)
+     ├── ⚠️ #engineering-warnings (reboots)
+     └── ✅ #engineering-info (success)
+```
+
+**Key Points:**
+- 🔒 **Servers only need**: GitHub token (no Slack credentials)
+- 🏗️ **GitHub Actions handles**: All Slack integration and channel routing
+- 🔐 **Slack credentials**: Stored securely as GitHub repository secrets
+- 📡 **Notifications**: Automatically routed to appropriate channels based on update status
 
 ### 🔍 Monitoring
 
