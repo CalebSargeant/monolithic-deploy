@@ -31,8 +31,6 @@ spec:
           env:
             - name: TZ
               value: "Europe/Amsterdam" # Adjust timezone
-            - name: NODE_OPTIONS
-              value: "--security-revert=CVE-2023-46809"
           volumeMounts:
             - mountPath: /homebridge
               name: homebridge
