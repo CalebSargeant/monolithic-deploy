@@ -16,28 +16,38 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet # Adjust DNS policy when using host networking
       initContainers:
         - name: upgrade-nodejs
-          image: alpine:3.18
-          command: ["/bin/sh"]
+          image: debian:12-slim
+          command: ["/bin/bash"]
           args:
             - "-c"
             - |
               echo "Upgrading Node.js to latest version with PKCS1 support..."
-              apk add --no-cache curl tar xz
+              apt-get update && apt-get install -y curl xz-utils ca-certificates --no-install-recommends && rm -rf /var/lib/apt/lists/*
               
               # Get latest Node.js version (use a specific known good version with PKCS1 support)
               # Using Node.js v22.11.0 which has restored PKCS1 support
               LATEST_NODE="22.11.0"
               echo "Installing Node.js version: $LATEST_NODE"
               
+              # Detect architecture
+              ARCH=$(uname -m)
+              case $ARCH in
+                  x86_64) NODE_ARCH="x64" ;;
+                  aarch64) NODE_ARCH="arm64" ;;
+                  armv7l) NODE_ARCH="armv7l" ;;
+                  *) echo "Unsupported architecture: $ARCH"; exit 1 ;;
+              esac
+              echo "Detected architecture: $ARCH -> Node.js arch: $NODE_ARCH"
+              
               # Download and extract Node.js
               cd /tmp
               echo "Downloading Node.js..."
-              curl -fsSL https://nodejs.org/dist/v$LATEST_NODE/node-v$LATEST_NODE-linux-x64.tar.xz -o node.tar.xz
+              curl -fsSL https://nodejs.org/dist/v$LATEST_NODE/node-v$LATEST_NODE-linux-$NODE_ARCH.tar.xz -o node.tar.xz
               echo "Extracting Node.js..."
               tar -xJf node.tar.xz
               
               # Verify extraction was successful
-              if [ ! -d "node-v$LATEST_NODE-linux-x64" ]; then
+              if [ ! -d "node-v$LATEST_NODE-linux-$NODE_ARCH" ]; then
                 echo "ERROR: Node.js extraction failed"
                 exit 1
               fi
