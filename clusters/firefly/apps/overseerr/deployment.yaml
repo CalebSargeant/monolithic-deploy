@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: overseerr
+  namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: overseerr
+  template:
+    metadata:
+      labels:
+        app: overseerr
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: overseerr
+          image: sctx/overseerr:1.33.2
+          ports:
+            - containerPort: 5055
+          env:
+            - name: TZ
+              value: "Europe/Amsterdam"
+            - name: LOG_LEVEL
+              value: "info"
+            - name: PORT
+              value: "5055"
+          volumeMounts:
+            - mountPath: /app/config
+              name: overseerr-config
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+              ephemeral-storage: "1Gi"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+              ephemeral-storage: "2Gi"
+      volumes:
+        - name: overseerr-config
+          persistentVolumeClaim:
+            claimName: overseerr-config
