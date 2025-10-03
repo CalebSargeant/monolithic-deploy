@@ -16,7 +16,7 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet # Adjust DNS policy when using host networking
       containers:
         - name: homebridge
-          image: homebridge/homebridge:beta-2025-09-28
+          image: homebridge/homebridge:beta-2025-10-03
           resources:
             requests:
               memory: "256Mi"
